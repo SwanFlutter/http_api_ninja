@@ -70,7 +70,7 @@ Dart SDK >= 3.0.0
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/http_api_ninja.git
+git clone https://github.com/SwanFlutter/http_api_ninja.git
 cd http_api_ninja
 ```
 
@@ -171,11 +171,11 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🙏 Acknowledgments
 
 - Inspired by [Thunder Client](https://www.thunderclient.com/)
-- Built with ❤️ by the development team
+
 
 ## 📞 Contact
 
-- GitHub: [@yourusername](https://github.com/yourusername)
+- GitHub: [@SwanFlutter](https://github.com/SwanFlutter/http_api_ninja)
 - Email: your.email@example.com
 
 ## 🗺️ Roadmap
