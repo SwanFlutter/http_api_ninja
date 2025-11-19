@@ -1,103 +1,170 @@
-# تاریخچه تغییرات
+# Changelog
 
-## [1.0.0] - 2024-11-14
+All notable changes to this project will be documented in this file.
 
-### ✨ ویژگی‌های جدید
+## [1.0.1] - 2025-11-18
 
-#### رابط کاربری
-- ✅ طراحی مدرن مشابه Thunder Client
-- ✅ Sidebar با قابلیت مدیریت Collection
-- ✅ Request Builder با تمام تب‌های لازم
-- ✅ Response Area با نمایش زیبای JSON
-- ✅ Terminal داخلی برای نمایش خروجی‌ها
-- ✅ تم دارک و لایت با رنگ‌بندی حرفه‌ای
+### ✨ New Features
 
-#### قابلیت‌های HTTP
-- ✅ پشتیبانی از GET, POST, PUT, DELETE, PATCH
-- ✅ مدیریت Headers
-- ✅ مدیریت Query Parameters
-- ✅ پشتیبانی از Body
-- ✅ نمایش Status Code, Size, Time
-- ✅ نمایش Response با فرمت JSON
+#### Welcome Screen
+- Beautiful welcome screen with large logo (180x180 pixels)
+- Quick action cards (New Request, New Collection, Recent Activity)
+- Dynamic theme support (dark/light)
+- Gradient background
+- Displayed when no request is selected
 
-#### مدیریت داده
-- ✅ ذخیره‌سازی با GetX Storage
-- ✅ مدیریت Collection ها
-- ✅ ذخیره خودکار درخواست‌ها
-- ✅ بازیابی سریع داده‌ها
+#### Custom Notification System
+- Notification banner at the bottom of the screen
+- Color-coded by type (Success, Error, Info)
+- Manual close button
+- Auto-dismiss after 3 seconds
+- No Overlay context required
 
-#### چند زبانه
-- ✅ پشتیبانی از 5 زبان:
-  - انگلیسی (English)
-  - فارسی (Persian)
-  - عربی (Arabic)
-  - آلمانی (German)
-  - فرانسوی (French)
+#### Response Display with Syntax Highlighting
+- Integration of flutter_code_view package
+- JSON syntax highlighting
+- Line numbers display
+- Dracula theme for dark mode
+- GitHub theme for light mode
+- Copy button for response
 
-#### مدیریت State
-- ✅ استفاده از GetX برای State Management
-- ✅ Reactive Programming با Obx
-- ✅ Dependency Injection با GetX Bindings
-- ✅ کنترلرهای جداگانه برای هر بخش
+#### Improved Headers Display
+- Table format display
+- Header and Value columns
+- Appropriate color coding
+- Selectable and copyable text
+- Copy All Headers button
 
-### 🏗️ ساختار پروژه
-- ✅ معماری تمیز و قابل نگهداری
-- ✅ جداسازی کامل Controller, View, Model
-- ✅ ویجت‌های قابل استفاده مجدد
-- ✅ مدیریت تم و ترجمه مرکزی
+### 🔧 Improvements
 
-### 📚 مستندات
-- ✅ README کامل فارسی
-- ✅ راهنمای استفاده جامع
-- ✅ توضیحات کد و کامنت‌ها
-- ✅ مثال‌های کاربردی
+#### Better Error Handling
+- Null response handling
+- User-friendly error messages
+- Better timeout handling (30 seconds)
+- Error details in response
 
-### 🎨 طراحی
-- ✅ رنگ‌بندی مشابه Thunder Client
-- ✅ آیکون‌های مناسب و واضح
-- ✅ فونت‌های خوانا
-- ✅ فاصله‌گذاری استاندارد
+#### Performance
+- Improved response speed
+- Reduced memory usage
+- Better async operations management
 
-### 🔧 تکنیکال
-- ✅ Flutter 3.9.2+
-- ✅ GetX Master 0.0.19
-- ✅ GetX Storage 0.0.7
-- ✅ پشتیبانی از Windows, Android, iOS, Web
+#### User Interface
+- Status code display in notifications
+- Better color coding for success/error
+- Smoother animations
 
----
+#### Code
+- Refactored sendRequest method
+- Added _sendHttpRequest helper method
+- Improved error handling
+- Cleaner and more maintainable code
 
-## برنامه‌های آینده
+### 🐛 Bug Fixes
 
-### نسخه 1.1.0 (در دست توسعه)
-- [ ] پشتیبانی از GraphQL
-- [ ] پشتیبانی از WebSocket
-- [ ] مدیریت Environment Variables
-- [ ] Import/Export Collection
-- [ ] History درخواست‌ها
+1. **Application Hanging**
+   - Cause: null response
+   - Solution: null check before processing
 
-### نسخه 1.2.0 (برنامه‌ریزی شده)
-- [ ] Pre-request Scripts
-- [ ] Test Scripts با JavaScript
-- [ ] Code Generation
-- [ ] Mock Server
-- [ ] Team Collaboration
+2. **"No Overlay widget found" Error**
+   - Cause: Get.snackbar requiring Overlay context
+   - Solution: Custom notification system
 
-### نسخه 1.3.0 (آینده)
-- [ ] پشتیبانی از gRPC
-- [ ] پشتیبانی از SOAP
-- [ ] Performance Testing
-- [ ] Load Testing
-- [ ] API Documentation Generator
+3. **Opacity Assertion Error**
+   - Cause: Incorrect use of withValues
+   - Solution: Use withOpacity
+
+4. **UI Overflow**
+   - Cause: Too much content on small screen
+   - Solution: Use SingleChildScrollView and Wrap
+
+5. **Timeout Handling**
+   - Cause: Improper timeout management
+   - Solution: Use Future.any
 
 ---
 
-## نحوه مشارکت
+## [1.0.0] - 2025-11-18
 
-برای مشارکت در توسعه:
-1. یک Issue برای ویژگی جدید ایجاد کنید
-2. منتظر تایید تیم بمانید
-3. یک Pull Request ارسال کنید
+### ✨ Initial Release
+
+#### Core Features
+- **Complete HTTP Client**
+  - Support for all HTTP methods (GET, POST, PUT, DELETE, PATCH)
+  - Concurrent request sending
+  - Timeout and error management
+
+- **Collection Management**
+  - Create and delete collections
+  - Organize requests
+  - Expandable folders
+
+- **Advanced Request Builder**
+  - Query Parameters tab
+  - Headers tab with enable/disable
+  - Authentication tab (Basic, Bearer, API Key)
+  - Body tab (JSON, Form Data, Raw)
+  - Tests tab for automated testing
+  - Pre-run Scripts tab
+
+- **Comprehensive Response Area**
+  - Response Body with JSON formatting
+  - Response Headers display
+  - Cookies display
+  - Test results display
+  - Code Snippet generation for 20+ languages
+  - API documentation
+
+#### User Interface
+- **Modern Design**
+  - Inspired by Thunder Client
+  - Professional color scheme
+  - Clear and beautiful icons
+
+- **Dark/Light Theme**
+  - Dark mode with appropriate colors
+  - Light mode with high contrast
+  - Easy switching from settings
+
+- **Resizable Panels**
+  - Adjustable Response Area width
+  - Save user settings
+  - Custom user experience
+
+- **Sidebar with 3 Tabs**
+  - Activity: Recent requests display
+  - Collections: Collection management
+  - Env: Environment variables (coming soon)
+
+#### Multi-language Support
+- Support for 5 languages:
+  - English
+  - Persian (فارسی)
+  - Arabic (العربية)
+  - German (Deutsch)
+  - French (Français)
+
+#### Storage
+- **GetX Storage**
+  - Auto-save all requests
+  - Save collections
+  - Save user settings
+  - Fast data recovery
+
+### 🎨 UI/UX Improvements
+- Request status display (Loading)
+- Response time display
+- Response size display
+- HTTP method color coding
+- Snackbar for success/error messages
+
+### 📚 Documentation
+- Complete README
+- Usage guide
+- Contributing guide
+- TODO list
 
 ---
 
-**تاریخ آخرین به‌روزرسانی:** 14 نوامبر 2024
+**Initial release with all core features**
+
+For Persian changelog, see [CHANGELOG_FA.md](CHANGELOG_FA.md)

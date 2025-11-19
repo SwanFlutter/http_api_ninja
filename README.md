@@ -1,188 +1,231 @@
 # HTTP API Ninja 🥷
 
-یک کلاینت REST API قدرتمند و مدرن مشابه Postman و Thunder Client، ساخته شده با Flutter و GetX.
+A powerful and modern HTTP client built with Flutter and GetX - An alternative to Postman and Thunder Client
 
-## ✨ ویژگی‌ها
+[![Flutter](https://img.shields.io/badge/Flutter-3.0+-blue.svg)](https://flutter.dev/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey.svg)](https://flutter.dev/desktop)
 
-### 🎨 رابط کاربری
-- ✅ طراحی مدرن و حرفه‌ای مشابه Thunder Client
-- ✅ تم دارک و لایت با امکان تغییر آسان
-- ✅ رابط کاربری ریسپانسیو و قابل تنظیم
-- ✅ ترمینال داخلی برای نمایش خروجی‌ها
+## 📸 Screenshots
 
-### 🌍 چند زبانه
-- ✅ انگلیسی (English)
-- ✅ فارسی (Persian)
-- ✅ عربی (Arabic)
-- ✅ آلمانی (German)
-- ✅ فرانسوی (French)
+![Welcome Screen](screenshots/welcome.png)
+![Dark Theme](screenshots/dark_theme.png)
+![Light Theme](screenshots/light_theme.png)
 
-### 🚀 قابلیت‌های HTTP
-- ✅ پشتیبانی از تمام متدهای HTTP (GET, POST, PUT, DELETE, PATCH)
-- ✅ مدیریت Headers و Query Parameters
-- ✅ پشتیبانی از Authentication
-- ✅ ارسال Body با فرمت‌های مختلف
-- ✅ نمایش Response با فرمت JSON زیبا
-- ✅ نمایش اطلاعات Status، Size و Time
+## ✨ Key Features
 
-### 📁 مدیریت Collection
-- ✅ سازماندهی درخواست‌ها در Collection ها
-- ✅ ذخیره‌سازی خودکار با GetX Storage
-- ✅ امکان باز و بسته کردن فولدرها
-- ✅ جستجو و فیلتر Collection ها
+### 🎯 Core Functionality
+- **Complete HTTP Requests**: Support for GET, POST, PUT, DELETE, PATCH
+- **Collection Management**: Organize requests in expandable collections
+- **Advanced Request Builder**: 6 tabs for precise configuration
+  - Query Parameters
+  - Headers
+  - Authentication (Basic, Bearer Token, API Key)
+  - Body (JSON, Form Data, Raw)
+  - Tests
+  - Pre-run Scripts
+- **Comprehensive Response Area**: 6 tabs for response analysis
+  - Response Body with JSON syntax highlighting
+  - Response Headers (Table view)
+  - Cookies
+  - Test Results
+  - Documentation
+  - Code Snippets (20+ programming languages)
 
-### 💾 ذخیره‌سازی
-- ✅ ذخیره خودکار تمام درخواست‌ها
-- ✅ ذخیره تنظیمات تم و زبان
-- ✅ بازیابی سریع داده‌ها با GetX Storage
+### 🎨 User Interface
+- **Modern Design**: Inspired by Thunder Client
+- **Dark/Light Theme**: Easy switching between modes
+- **Resizable Panels**: Customize your workspace
+- **Responsive & Smooth**: Excellent user experience
+- **Welcome Screen**: Beautiful landing page with quick actions
 
-## 📦 نصب و راه‌اندازی
+### 🌍 Multi-language Support
+- English
+- Persian (فارسی)
+- Arabic (العربية)
+- German (Deutsch)
+- French (Français)
 
-### پیش‌نیازها
+### 💾 Storage
+- **Auto-save**: All requests are automatically saved
+- **GetX Storage**: Fast and efficient storage
+- **Activity History**: Quick access to recent requests
+
+### 🎨 Advanced Features
+- **Syntax Highlighting**: JSON response with color coding
+- **Line Numbers**: Easy code navigation
+- **Copy to Clipboard**: One-click copy for responses and headers
+- **Smart Notifications**: Custom notification system
+- **Error Handling**: Robust error management with user-friendly messages
+
+## 🚀 Quick Start
+
+### Prerequisites
 ```bash
-Flutter SDK >= 3.9.2
-Dart SDK >= 3.9.2
+Flutter SDK >= 3.0.0
+Dart SDK >= 3.0.0
 ```
 
-### نصب پکیج‌ها
+### Installation
+
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/http_api_ninja.git
+cd http_api_ninja
+```
+
+2. Install dependencies:
 ```bash
 flutter pub get
 ```
 
-### اجرا
+3. Run the application:
 ```bash
-# اجرا روی ویندوز
+# For Windows
 flutter run -d windows
 
-# اجرا روی اندروید
-flutter run -d android
+# For macOS
+flutter run -d macos
 
-# اجرا روی iOS
-flutter run -d ios
+# For Linux
+flutter run -d linux
 
-# اجرا روی وب
+# For Web
 flutter run -d chrome
 ```
 
-## 🏗️ ساختار پروژه
+## 📖 Usage Guide
 
-```
-lib/
-├── bindings/              # GetX Bindings
-│   └── http_ninja_bindings.dart
-├── config/                # تنظیمات و ثابت‌ها
-│   └── constant.dart
-├── controller/            # کنترلرهای GetX
-│   ├── http_controller.dart
-│   ├── theme_controller.dart
-│   └── locale_controller.dart
-├── I18n/                  # فایل‌های ترجمه
-│   ├── messages.dart
-│   ├── translations.dart
-│   ├── en.dart
-│   ├── fa.dart
-│   ├── ar.dart
-│   ├── de.dart
-│   └── fr.dart
-├── models/                # مدل‌های داده
-│   ├── http_request_model.dart
-│   ├── http_response_model.dart
-│   └── collection_model.dart
-├── theme/                 # تم‌های اپلیکیشن
-│   └── theme.dart
-├── views/                 # صفحات اصلی
-│   └── home_view.dart
-├── widgets/               # ویجت‌های قابل استفاده مجدد
-│   ├── sidebar_widget.dart
-│   ├── request_builder_widget.dart
-│   ├── response_area_widget.dart
-│   ├── terminal_widget.dart
-│   └── settings_dialog.dart
-└── main.dart             # نقطه شروع برنامه
-```
+### Creating a New Collection
+1. Click the "New Collection" button
+2. Enter the collection name
+3. Click "Create"
 
-## 🎯 استفاده
+### Creating a New Request
+1. Click the "New Request" button
+2. Enter the request name
+3. Select the HTTP method
+4. Choose the target collection
+5. Click "Create"
 
-### ارسال درخواست
-1. متد HTTP را انتخاب کنید (GET, POST, PUT, DELETE, PATCH)
-2. URL را وارد کنید
-3. در صورت نیاز Headers، Query Parameters یا Body را اضافه کنید
-4. دکمه Send را بزنید
+### Sending a Request
+1. Select a request from the sidebar
+2. Enter the URL
+3. Configure parameters, headers, and body
+4. Click the "Send" button
 
-### مدیریت Collection
-1. روی دکمه "New Request" کلیک کنید
-2. درخواست خود را پیکربندی کنید
-3. درخواست به صورت خودکار ذخیره می‌شود
-4. از Sidebar برای دسترسی به درخواست‌های ذخیره شده استفاده کنید
+### Sidebar Tabs
+- **Activity**: View recent requests
+- **Collections**: Manage collections and requests
+- **Env**: Environment variables (coming soon)
 
-### تغییر تم و زبان
-1. روی آیکون Settings در Sidebar کلیک کنید
-2. تم دلخواه (Light/Dark) را انتخاب کنید
-3. زبان مورد نظر را از لیست انتخاب کنید
+## 🛠️ Technologies
 
-## 🛠️ تکنولوژی‌های استفاده شده
+- **Flutter**: UI framework
+- **GetX**: State management and routing
+- **GetX Storage**: Local storage
+- **HTTP**: HTTP request handling
+- **flutter_code_view**: Syntax highlighting
 
-- **Flutter** - فریمورک UI
-- **GetX** - مدیریت State، Routing و Dependency Injection
-- **GetX Storage** - ذخیره‌سازی محلی
-- **Dart** - زبان برنامه‌نویسی
-
-## 📚 پکیج‌های استفاده شده
+## � Main Deیpendencies
 
 ```yaml
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.8
   get_x_master: ^0.0.19
   get_x_storage: ^0.0.7
+  flutter_code_view: ^0.0.3
 ```
 
-## 🎨 تم‌ها
+## 🎨 Theming
 
-### تم دارک (پیش‌فرض)
-- رنگ اصلی: `#FF6B9D` (صورتی)
-- پس‌زمینه: `#1E1E1E` (خاکستری تیره)
-- سطح: `#252526` (خاکستری)
+The application uses an advanced theming system that includes:
+- Custom colors for dark and light modes
+- Optimized fonts
+- Smooth animations
+- Syntax highlighting themes (Dracula for dark, GitHub for light)
 
-### تم روشن
-- رنگ اصلی: `#FF6B9D` (صورتی)
-- پس‌زمینه: `#F5F5F5` (خاکستری روشن)
-- سطح: `#FFFFFF` (سفید)
+## 🌐 Internationalization
 
-## 🌟 ویژگی‌های آینده
+To add a new language:
+1. Create a new translation file in `lib/I18n/`
+2. Add the translation class to `lib/I18n/translations.dart`
+3. Add the language to `LocaleController`
 
-- [ ] پشتیبانی از GraphQL
-- [ ] پشتیبانی از WebSocket
-- [ ] Import/Export Collection
-- [ ] مدیریت Environment Variables
-- [ ] Pre-request Scripts
-- [ ] Test Scripts
-- [ ] History درخواست‌ها
-- [ ] Code Generation
+## 🤝 Contributing
+
+Contributions are always welcome! Please:
+1. Fork the project
+2. Create a new branch
+3. Commit your changes
+4. Push to your branch
+5. Create a Pull Request
+
+For more details, read [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- Inspired by [Thunder Client](https://www.thunderclient.com/)
+- Built with ❤️ by the development team
+
+## 📞 Contact
+
+- GitHub: [@yourusername](https://github.com/yourusername)
+- Email: your.email@example.com
+
+## 🗺️ Roadmap
+
+- [ ] Environment Variables
+- [ ] Import/Export Collections
+- [ ] WebSocket Support
+- [ ] GraphQL Support
 - [ ] Mock Server
+- [ ] Team Collaboration
+- [ ] Cloud Sync
+- [ ] Mobile Apps (Android & iOS)
 
-## 🤝 مشارکت
+## 🐛 Bug Reports
 
-مشارکت‌ها همیشه خوش‌آمد هستند! لطفاً:
-1. پروژه را Fork کنید
-2. یک Branch جدید بسازید
-3. تغییرات خود را Commit کنید
-4. Push به Branch کنید
-5. یک Pull Request ایجاد کنید
+Found a bug? Please open an issue on GitHub with:
+- Flutter version
+- Operating system
+- Error message
+- Steps to reproduce
+- Relevant logs
 
-## 📝 لایسنس
+## 💡 Features
 
-این پروژه تحت لایسنس MIT منتشر شده است.
+### Welcome Screen
+- Large logo (180x180 pixels)
+- Quick action cards
+- Dynamic theme support
+- Gradient background
 
-## 👨‍💻 توسعه‌دهنده
+### Notification System
+- Custom notification banner
+- Color-coded by type (Success, Error, Info)
+- Auto-dismiss after 3 seconds
+- Manual close button
 
-ساخته شده با ❤️ توسط تیم توسعه
+### Response Display
+- JSON syntax highlighting with line numbers
+- Headers displayed in table format
+- Copy buttons for easy clipboard access
+- Selectable text
 
-## 📞 پشتیبانی
-
-برای گزارش باگ یا درخواست ویژگی جدید، لطفاً یک Issue ایجاد کنید.
+### Error Handling
+- Null response handling
+- 30-second timeout
+- User-friendly error messages
+- Network error detection
 
 ---
 
-**نکته:** این پروژه در حال توسعه است و ویژگی‌های جدید به زودی اضافه خواهند شد.
+**Built with Flutter 💙**
+
+For Persian documentation, see [README_FA.md](README_FA.md)
