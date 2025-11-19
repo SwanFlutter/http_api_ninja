@@ -2,6 +2,9 @@
 
 یک کلاینت REST API قدرتمند و مدرن مشابه Postman و Thunder Client، ساخته شده با Flutter و GetX.
 
+<img width="1024" height="1024" alt="logo_dark" src="https://github.com/user-attachments/assets/fe583232-56ab-4e76-8e8c-9cdce4e2dd0c" />
+
+
 ## ✨ ویژگی‌ها
 
 ### 🎨 رابط کاربری
