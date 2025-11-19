@@ -1,6 +1,6 @@
 # HTTP API Ninja 🥷
 
-A powerful and modern HTTP client built with Flutter and GetX - An alternative to Postman and Thunder Client
+A powerful and modern HTTP client built with Flutter and Get_x_master - An alternative to Postman and Thunder Client
 
 [![Flutter](https://img.shields.io/badge/Flutter-3.0+-blue.svg)](https://flutter.dev/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
@@ -8,9 +8,11 @@ A powerful and modern HTTP client built with Flutter and GetX - An alternative t
 
 ## 📸 Screenshots
 
-![Welcome Screen](screenshots/welcome.png)
-![Dark Theme](screenshots/dark_theme.png)
-![Light Theme](screenshots/light_theme.png)
+<img width="1024" height="1024" alt="logo_dark" src="https://github.com/user-attachments/assets/22234579-8f7f-4e6a-a7f4-c2087fe41eaa" />
+
+<img width="1920" height="1017" alt="30" src="https://github.com/user-attachments/assets/ed47fdea-86eb-435a-ab84-0ea2626e4043" />
+
+
 
 ## ✨ Key Features
 
