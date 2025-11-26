@@ -58,33 +58,25 @@ class AppTheme {
       elevation: 4,
     ),
     textTheme: TextTheme(
-      titleLarge: TextStyleHelper.titelLarge.copyWith(color: Colors.black),
-      titleMedium: TextStyleHelper.titelMedium.copyWith(color: Colors.black87),
-      titleSmall: TextStyleHelper.titelSmall.copyWith(color: Colors.black87),
+      titleLarge: TextStyleHelper.titleLarge,
+      titleMedium: TextStyleHelper.titleMedium,
+      titleSmall: TextStyleHelper.titleSmall,
 
-      labelSmall: TextStyleHelper.labelSmall.copyWith(color: Colors.grey[700]),
-      labelMedium: TextStyleHelper.labelMedium.copyWith(color: Colors.black87),
-      labelLarge: TextStyleHelper.labelLarge.copyWith(color: Colors.black),
+      labelSmall: TextStyleHelper.labelSmall,
+      labelMedium: TextStyleHelper.labelMedium,
+      labelLarge: TextStyleHelper.labelLarge,
 
-      bodySmall: TextStyleHelper.bodySmall.copyWith(color: Colors.grey[800]),
-      bodyMedium: TextStyleHelper.bodyMedium.copyWith(color: Colors.black87),
-      bodyLarge: TextStyleHelper.bodyLarge.copyWith(color: Colors.black),
+      bodySmall: TextStyleHelper.bodySmall,
+      bodyMedium: TextStyleHelper.bodyMedium,
+      bodyLarge: TextStyleHelper.bodyLarge,
 
-      displayLarge: TextStyleHelper.displayLarge.copyWith(color: Colors.black),
-      displayMedium: TextStyleHelper.displayMedium.copyWith(
-        color: Colors.black,
-      ),
-      displaySmall: TextStyleHelper.displaySmall.copyWith(
-        color: Colors.black87,
-      ),
+      displayLarge: TextStyleHelper.displayLarge,
+      displayMedium: TextStyleHelper.displayMedium,
+      displaySmall: TextStyleHelper.displaySmall,
 
-      headlineLarge: TextStyleHelper.displaySmall.copyWith(color: Colors.black),
-      headlineMedium: TextStyleHelper.headlineMedium.copyWith(
-        color: Colors.black87,
-      ),
-      headlineSmall: TextStyleHelper.headlineSmall.copyWith(
-        color: Colors.black87,
-      ),
+      headlineLarge: TextStyleHelper.headlineLarge,
+      headlineMedium: TextStyleHelper.headlineMedium,
+      headlineSmall: TextStyleHelper.headlineSmall,
     ),
 
     inputDecorationTheme: InputDecorationTheme(
@@ -274,42 +266,27 @@ class AppTheme {
     ),
     textTheme: TextTheme(
       // Dark theme text styles using TextStyleHelper
-      titleLarge: TextStyleHelper.titelLarge.copyWith(color: Colors.white),
-      titleMedium: TextStyleHelper.titelMedium.copyWith(color: Colors.white),
-      titleSmall: TextStyleHelper.titelSmall.copyWith(color: Color(0xFFE2E8F0)),
+      titleLarge: TextStyleHelper.titleLargeDark,
+      titleMedium: TextStyleHelper.titleMediumDark,
+      titleSmall: TextStyleHelper.titleSmallDark,
 
       // label styles for dark theme
-      labelSmall: TextStyleHelper.labelSmall.copyWith(color: Color(0xFF94A3B8)),
-      labelMedium: TextStyleHelper.labelMedium.copyWith(
-        color: Color(0xFFCBD5E1),
-      ),
-      labelLarge: TextStyleHelper.labelLarge.copyWith(color: Colors.white),
+      labelSmall: TextStyleHelper.labelSmallDark,
+      labelMedium: TextStyleHelper.labelMediumDark,
+      labelLarge: TextStyleHelper.labelLargeDark,
 
       // body styles for dark theme
-      bodySmall: TextStyleHelper.bodySmall.copyWith(color: Color(0xFF94A3B8)),
-      bodyMedium: TextStyleHelper.bodyMedium.copyWith(color: Color(0xFFCBD5E1)),
-      bodyLarge: TextStyleHelper.bodyLarge.copyWith(color: Colors.white),
+      bodySmall: TextStyleHelper.bodySmallDark,
+      bodyMedium: TextStyleHelper.bodyMediumDark,
+      bodyLarge: TextStyleHelper.bodyLargeDark,
 
-      displayLarge: TextStyle(
-        fontSize: 36.0,
-        fontWeight: FontWeight.bold,
-        color: Colors.white,
-      ),
-      displayMedium: TextStyle(
-        fontSize: 30.0,
-        fontWeight: FontWeight.bold,
-        color: Colors.white,
-      ),
-      headlineLarge: TextStyle(
-        fontSize: 24.0,
-        fontWeight: FontWeight.bold,
-        color: Colors.white,
-      ),
-      headlineMedium: TextStyle(
-        fontSize: 20.0,
-        fontWeight: FontWeight.w600,
-        color: Color(0xFFE2E8F0),
-      ),
+      displayLarge: TextStyleHelper.displayLargeDark,
+      displayMedium: TextStyleHelper.displayMediumDark,
+      displaySmall: TextStyleHelper.displaySmallDark,
+
+      headlineLarge: TextStyleHelper.headlineLargeDark,
+      headlineMedium: TextStyleHelper.headlineMediumDark,
+      headlineSmall: TextStyleHelper.headlineSmallDark,
     ),
     inputDecorationTheme: InputDecorationTheme(
       fillColor: surfaceColorDark,

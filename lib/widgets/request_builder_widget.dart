@@ -59,8 +59,7 @@ class RequestBuilderWidget extends StatelessWidget {
                         dropdownColor: isDark
                             ? const Color(0xFF3C3C3C)
                             : Colors.white,
-                        style: TextStyle(
-                          fontSize: 13,
+                        style: context.textTheme.bodySmall?.copyWith(
                           color: isDark ? Colors.white : Colors.black,
                           fontWeight: FontWeight.w600,
                         ),
@@ -113,36 +112,39 @@ class RequestBuilderWidget extends StatelessWidget {
                             vertical: 12,
                           ),
                         ),
-                        style: const TextStyle(fontSize: 13),
+                        style: context.textTheme.bodySmall,
                         onChanged: (value) => controller.url.value = value,
                       ),
                     ),
                   ),
                   const SizedBox(width: 8),
                   Obx(
-                    () => ElevatedButton.icon(
-                      onPressed: controller.isLoading.value
-                          ? null
-                          : () => controller.sendRequest(),
-                      icon: Icon(
-                        controller.isLoading.value
-                            ? Icons.hourglass_empty
-                            : Icons.send,
-                        size: 14,
-                      ),
-                      label: Text(
-                        Messages.send.tr,
-                        style: const TextStyle(fontSize: 12),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 10,
+                    () => SizedBox(
+                      height: 45,
+                      child: ElevatedButton.icon(
+                        onPressed: controller.isLoading.value
+                            ? null
+                            : () => controller.sendRequest(),
+                        icon: Icon(
+                          controller.isLoading.value
+                              ? Icons.hourglass_empty
+                              : Icons.send,
+                          size: 14,
                         ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4),
+                        label: Text(
+                          Messages.send.tr,
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 10,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4),
+                          ),
                         ),
                       ),
                     ),
@@ -216,8 +218,7 @@ class RequestBuilderWidget extends StatelessWidget {
                                           children: [
                                             Text(
                                               tab.tr,
-                                              style: TextStyle(
-                                                fontSize: 13,
+                                              style: context.textTheme.labelMedium?.copyWith(
                                                 color: isSelected
                                                     ? Theme.of(
                                                         context,
@@ -242,7 +243,7 @@ class RequestBuilderWidget extends StatelessWidget {
                                                   decoration: BoxDecoration(
                                                     color: Theme.of(context)
                                                         .primaryColor
-                                                        .withOpacity(0.2),
+                                                        .withValues(alpha: 0.2),
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                           10,
@@ -274,7 +275,7 @@ class RequestBuilderWidget extends StatelessWidget {
                                                       ),
                                                   decoration: BoxDecoration(
                                                     color: Colors.green
-                                                        .withOpacity(0.2),
+                                                        .withValues(alpha: 0.2),
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                           2,

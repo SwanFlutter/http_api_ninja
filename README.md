@@ -50,8 +50,15 @@ A powerful and modern HTTP client built with Flutter and Get_x_master - An alter
 
 ### 💾 Storage
 - **Auto-save**: All requests are automatically saved
-- **GetX Storage**: Fast and efficient storage
-- **Activity History**: Quick access to recent requests
+- **Get_x_Storage**: Fast and efficient storage
+- **Request History**: Full history with search, filter, and restore
+- **Environment Storage**: Save environments and variables
+
+### 🌐 Environment Variables
+- **Multiple Environments**: Dev, Staging, Production
+- **Global Variables**: Shared across all environments
+- **Variable Syntax**: Use `{{variable}}` in URL, Headers, Query Params
+- **Import/Export**: JSON format support
 
 ### 🎨 Advanced Features
 - **Syntax Highlighting**: JSON response with color coding
@@ -117,9 +124,9 @@ flutter run -d chrome
 4. Click the "Send" button
 
 ### Sidebar Tabs
-- **Activity**: View recent requests
-- **Collections**: Manage collections and requests
-- **Env**: Environment variables (coming soon)
+- **History**: View and search request history with filters
+- **Collections**: Manage collections and requests (with rename support)
+- **Env**: Full environment variables management
 
 ## 🛠️ Technologies
 
@@ -178,11 +185,14 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 📞 Contact
 
 - GitHub: [@SwanFlutter](https://github.com/SwanFlutter/http_api_ninja)
-- Email: your.email@example.com
+- Email: swan.dev1993@gmail.com
 
 ## 🗺️ Roadmap
 
-- [ ] Environment Variables
+- [x] Environment Variables ✅ (v1.1.0)
+- [x] Request History ✅ (v1.1.0)
+- [x] Rename Collections ✅ (v1.1.0)
+- [x] Code Snippet Syntax Highlighting ✅ (v1.1.0)
 - [ ] Import/Export Collections
 - [ ] WebSocket Support
 - [ ] GraphQL Support

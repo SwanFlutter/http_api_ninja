@@ -2,6 +2,68 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.0] - 2025-11-26
+
+### ✨ New Features
+
+#### Environment Variables System
+- **Multiple Environments**: Create and manage Dev, Staging, Production environments
+- **Variable Management**: Add, edit, delete variables per environment
+- **Global Variables**: Shared variables across all environments
+- **Variable Replacement**: Use `{{variable}}` syntax in URL, Headers, Query Params
+- **Import/Export**: Export environment to JSON, import from JSON
+- **Active Environment**: Quick switch between environments
+- **Copy Variable Syntax**: One-click copy `{{variable}}` to clipboard
+
+#### Complete History System
+- **Auto-save History**: Every request is automatically saved to history
+- **Search & Filter**: Search by URL or name, filter by HTTP method
+- **History Details**: Status code, response time, response size, timestamp
+- **Load from History**: One-click to restore request from history
+- **Clear Options**: Clear all, clear older than 1 day/week
+- **Maximum 100 Items**: Automatic cleanup of old entries
+
+#### Collection Management Improvements
+- **Rename Collection**: Right-click menu to rename collections
+- **Better Organization**: Improved folder structure
+
+#### Code Snippet with Syntax Highlighting
+- **FlutterCodeView Integration**: Beautiful syntax highlighting
+- **20+ Languages**: Dart, JavaScript, Python, Java, Go, PHP, Ruby, Swift, C#, Kotlin, etc.
+- **Theme Support**: Dracula theme for dark mode, GitHub theme for light mode
+- **Line Numbers**: Easy code navigation
+- **Copy Button**: One-click copy generated code
+
+### 🔧 Improvements
+
+#### Variable Processing
+- URL variables are replaced before sending request
+- Header variables are replaced before sending request
+- Query parameter variables are replaced before sending request
+
+#### History Tab (Replaced Activity Tab)
+- New modern design
+- Better filtering options
+- Response info display (time, size, status)
+- Time ago format (Just now, 5m ago, 2h ago, etc.)
+
+#### Environment Tab (Replaced Coming Soon)
+- Full environment management UI
+- Tabbed interface for Environment/Global variables
+- Variable list with edit/delete actions
+
+### 🐛 Bug Fixes
+
+1. **FlutterCodeView Overflow**
+   - Cause: Fixed height causing overflow
+   - Solution: Wrap in SingleChildScrollView with dynamic sizing
+
+2. **Variable Replacement**
+   - Proper regex for `{{variable}}` pattern
+   - Fallback to original if variable not found
+
+---
+
 ## [1.0.1] - 2025-11-18
 
 ### ✨ New Features

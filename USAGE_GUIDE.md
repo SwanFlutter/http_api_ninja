@@ -1,3 +1,351 @@
+Here is the English version of your **HTTP API Ninja User Guide**:
+
+---
+
+# HTTP API Ninja User Guide
+
+## 📖 Table of Contents
+1. [Quick Start](#quick-start)
+2. [Sending Requests](#sending-requests)
+3. [Collection Management](#collection-management)
+4. [Settings](#settings)
+5. [Tips and Tricks](#tips-and-tricks)
+
+---
+
+## 🚀 Quick Start
+
+### Send Your First Request
+1. **Select HTTP Method**
+   - Choose your desired method from the dropdown menu.
+   - Available methods: GET, POST, PUT, DELETE, PATCH.
+
+2. **Enter URL**
+   - Input the full API URL in the designated field.
+   - Example: `https://api.example.com/users`
+
+3. **Send Request**
+   - Click the "Send" button.
+   - Wait for the response.
+
+---
+
+## 📤 Sending Requests
+
+### HTTP Methods
+
+#### GET – Retrieve Data
+```http
+Method: GET
+URL: https://api.example.com/users
+```
+Use to fetch a list of users or specific information.
+
+#### POST – Create New Data
+```http
+Method: POST
+URL: https://api.example.com/users
+Body:
+{
+  "name": "John Doe",
+  "email": "john@example.com"
+}
+```
+
+#### PUT – Full Update
+```http
+Method: PUT
+URL: https://api.example.com/users/1
+Body:
+{
+  "name": "John Updated",
+  "email": "john.new@example.com"
+}
+```
+
+#### DELETE – Delete Data
+```http
+Method: DELETE
+URL: https://api.example.com/users/1
+```
+
+#### PATCH – Partial Update
+```http
+Method: PATCH
+URL: https://api.example.com/users/1
+Body:
+{
+  "name": "John Updated"
+}
+```
+
+---
+
+### Request Tabs
+
+#### Query Parameters
+Add URL parameters:
+```
+key: page
+value: 1
+key: limit
+value: 10
+```
+Result: `https://api.example.com/users?page=1&limit=10`
+
+#### Headers
+Add custom headers:
+```
+Content-Type: application/json
+Authorization: Bearer your-token-here
+Accept: application/json
+```
+
+#### Auth
+Authentication types:
+- **No Auth**: No authentication
+- **Bearer Token**: JWT token
+- **Basic Auth**: Username and password
+- **API Key**: API key
+
+#### Body
+Request content:
+- **JSON**: For RESTful APIs
+- **Form Data**: For file uploads
+- **Raw**: Raw text
+- **XML**: XML data
+
+#### Tests
+Automated response tests:
+```javascript
+// Check status code
+response.status === 200
+// Check content
+response.body.data.length > 0
+```
+
+#### Pre Run
+Pre-execution scripts:
+```javascript
+// Set variables
+env.set('timestamp', Date.now());
+```
+
+---
+
+## 📁 Collection Management
+
+### Create a New Collection
+1. Click the "New Request" button.
+2. Configure the request.
+3. It will be automatically saved in the Collection.
+
+### Organize Requests
+- Requests are grouped in folders.
+- Click the folder icon to expand/collapse.
+- Use the search feature to find requests quickly.
+
+### Select a Request
+- Click any request.
+- Request details will be displayed.
+- You can edit and resend it.
+
+---
+
+## 📊 Response Display
+
+### Response Tabs
+
+#### Response
+- Displays formatted JSON response.
+- Copy text feature.
+- Color-coded for better readability.
+
+#### Headers
+- Shows all response headers.
+- Includes Content-Type, Cache-Control, etc.
+
+#### Cookies
+- Displays received cookies.
+- Manage cookies for future requests.
+
+#### Results
+- Shows automated test results.
+- Pass/Fail status for each test.
+
+#### Docs
+- Auto-generated API documentation.
+- Sample code for different languages.
+
+### Response Information
+- **Status**: HTTP status code (200, 404, 500, etc.)
+- **Size**: Response size in kilobytes.
+- **Time**: Response time in milliseconds.
+
+---
+
+## 🖥️ Terminal
+
+### Terminal Display
+- Located on the right side of the page.
+- Shows detailed request and response information.
+- Can be closed by clicking the X icon.
+
+### Terminal Content
+```
+Request: GET https://api.example.com/users
+Status: 200 OK    Size: 2.5 KB    Time: 234 ms
+Response:
+{
+  "data": [
+    {
+      "id": 1,
+      "name": "John Doe"
+    }
+  ]
+}
+```
+
+---
+
+## ⚙️ Settings
+
+### Change Theme
+1. Click the Settings icon.
+2. Select your preferred theme:
+   - **Light Mode**: Light theme
+   - **Dark Mode**: Dark theme
+
+### Change Language
+1. Click the Settings icon.
+2. Select your preferred language:
+   - English
+   - فارسی (Persian)
+   - العربية (Arabic)
+   - Deutsch (German)
+   - Français (French)
+
+---
+
+## 💡 Tips and Tricks
+
+### Keyboard Shortcuts
+- `Ctrl + Enter`: Send request
+- `Ctrl + N`: New request
+- `Ctrl + S`: Save request
+- `Ctrl + F`: Search in Collection
+
+### Best Practices
+
+#### 1. Naming Requests
+```
+✅ Good: "Get User Profile"
+❌ Bad: "Request 1"
+```
+
+#### 2. Organizing Collections
+```
+📁 Users
+  ├── Get All Users
+  ├── Get User by ID
+  ├── Create User
+  └── Update User
+📁 Products
+  ├── Get All Products
+  └── Create Product
+```
+
+#### 3. Using Variables
+```
+URL: {{base_url}}/users
+Header: Authorization: Bearer {{token}}
+```
+
+#### 4. Automated Tests
+```javascript
+// Always check the status code
+test("Status is 200", () => {
+  expect(response.status).toBe(200);
+});
+// Check data structure
+test("Response has data", () => {
+  expect(response.body.data).toBeDefined();
+});
+```
+
+### Troubleshooting Common Issues
+
+#### CORS Error
+```
+Error: CORS policy blocked
+Solution: Use a proxy or enable CORS on the server.
+```
+
+#### Timeout Error
+```
+Error: Request timeout
+Solution: Increase the timeout in settings.
+```
+
+#### SSL Error
+```
+Error: SSL certificate problem
+Solution: Disable "Verify SSL" (for development only).
+```
+
+---
+
+## 🎓 Practical Examples
+
+### Example 1: JWT Authentication
+```
+1. Login Request:
+   POST https://api.example.com/auth/login
+   Body:
+   {
+     "email": "user@example.com",
+     "password": "password123"
+   }
+2. Get the token from the response.
+3. Use it in subsequent requests:
+   Header: Authorization: Bearer {token}
+```
+
+### Example 2: File Upload
+```
+POST https://api.example.com/upload
+Content-Type: multipart/form-data
+Body (Form Data):
+  file: [Select file]
+  description: "Profile picture"
+```
+
+### Example 3: Pagination
+```
+GET https://api.example.com/users?page=1&limit=10
+Query Parameters:
+  page: 1
+  limit: 10
+  sort: name
+  order: asc
+```
+
+---
+
+## 📞 Get Help
+If you have questions or encounter issues:
+1. Check the documentation.
+2. Search the Issues section.
+3. Create a new Issue.
+4. Contact the support team.
+
+---
+**Happy testing! 🚀**
+
+
+
+
+
 # راهنمای استفاده از HTTP API Ninja
 
 ## 📖 فهرست مطالب

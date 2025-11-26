@@ -32,7 +32,7 @@ class AuthTab extends StatelessWidget {
                 (type) {
                   final isSelected = controller.authType.value == type;
                   return ChoiceChip(
-                    label: Text(type),
+                    label: Text(type, style: context.textTheme.labelMedium),
                     selected: isSelected,
                     onSelected: (selected) {
                       if (selected) {
@@ -53,17 +53,17 @@ class AuthTab extends StatelessWidget {
             child: Obx(() {
               switch (controller.authType.value) {
                 case 'None':
-                  return _buildNoneAuth();
+                  return _buildNoneAuth(context);
                 case 'Basic':
-                  return _buildBasicAuth(controller);
+                  return _buildBasicAuth(context, controller);
                 case 'Bearer':
-                  return _buildBearerAuth(controller);
+                  return _buildBearerAuth(context, controller);
                 case 'OAuth 2.0':
-                  return _buildOAuthAuth(controller);
+                  return _buildOAuthAuth(context, controller);
                 case 'API Key':
-                  return _buildApiKeyAuth(controller);
+                  return _buildApiKeyAuth(context, controller);
                 default:
-                  return _buildNoneAuth();
+                  return _buildNoneAuth(context);
               }
             }),
           ),
@@ -72,7 +72,7 @@ class AuthTab extends StatelessWidget {
     );
   }
 
-  Widget _buildNoneAuth() {
+  Widget _buildNoneAuth(BuildContext context) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -81,20 +81,20 @@ class AuthTab extends StatelessWidget {
           const SizedBox(height: 16),
           Text(
             'No Authentication Selected',
-            style: TextStyle(color: Colors.grey[400], fontSize: 16),
+            style: context.textTheme.bodyMedium?.copyWith(color: Colors.grey[400]),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildBasicAuth(HttpController controller) {
+  Widget _buildBasicAuth(BuildContext context, HttpController controller) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'Basic Authentication',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          style: context.textTheme.titleSmall,
         ),
         const SizedBox(height: 16),
         TextField(
@@ -117,13 +117,13 @@ class AuthTab extends StatelessWidget {
     );
   }
 
-  Widget _buildBearerAuth(HttpController controller) {
+  Widget _buildBearerAuth(BuildContext context, HttpController controller) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'Bearer Token',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          style: context.textTheme.titleSmall,
         ),
         const SizedBox(height: 16),
         TextField(
@@ -153,13 +153,13 @@ class AuthTab extends StatelessWidget {
     );
   }
 
-  Widget _buildOAuthAuth(HttpController controller) {
+  Widget _buildOAuthAuth(BuildContext context, HttpController controller) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'OAuth 2.0',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          style: context.textTheme.titleSmall,
         ),
         const SizedBox(height: 16),
         DropdownButtonFormField<String>(
@@ -223,13 +223,13 @@ class AuthTab extends StatelessWidget {
     );
   }
 
-  Widget _buildApiKeyAuth(HttpController controller) {
+  Widget _buildApiKeyAuth(BuildContext context, HttpController controller) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'API Key',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          style: context.textTheme.titleSmall,
         ),
         const SizedBox(height: 16),
         TextField(

@@ -30,8 +30,7 @@ class TestsTab extends StatelessWidget {
                 flex: 2,
                 child: Text(
                   'Condition',
-                  style: TextStyle(
-                    fontSize: 12,
+                  style: context.textTheme.labelSmall?.copyWith(
                     fontWeight: FontWeight.w600,
                     color: Colors.grey[600],
                   ),
@@ -42,8 +41,7 @@ class TestsTab extends StatelessWidget {
                 flex: 2,
                 child: Text(
                   'Operator',
-                  style: TextStyle(
-                    fontSize: 12,
+                  style: context.textTheme.labelSmall?.copyWith(
                     fontWeight: FontWeight.w600,
                     color: Colors.grey[600],
                   ),
@@ -54,8 +52,7 @@ class TestsTab extends StatelessWidget {
                 flex: 2,
                 child: Text(
                   'Expected Value',
-                  style: TextStyle(
-                    fontSize: 12,
+                  style: context.textTheme.labelSmall?.copyWith(
                     fontWeight: FontWeight.w600,
                     color: Colors.grey[600],
                   ),
@@ -84,7 +81,7 @@ class TestsTab extends StatelessWidget {
                     const SizedBox(height: 16),
                     Text(
                       'No tests defined',
-                      style: TextStyle(color: Colors.grey[400]),
+                      style: context.textTheme.bodyMedium?.copyWith(color: Colors.grey[400]),
                     ),
                   ],
                 ),
@@ -133,7 +130,7 @@ class TestsTab extends StatelessWidget {
                                       value: e,
                                       child: Text(
                                         e,
-                                        style: const TextStyle(fontSize: 13),
+                                        style: context.textTheme.bodySmall,
                                       ),
                                     ),
                                   )
@@ -168,7 +165,7 @@ class TestsTab extends StatelessWidget {
                                       value: e,
                                       child: Text(
                                         e,
-                                        style: const TextStyle(fontSize: 13),
+                                        style: context.textTheme.bodySmall,
                                       ),
                                     ),
                                   )
@@ -193,7 +190,7 @@ class TestsTab extends StatelessWidget {
                               vertical: 8,
                             ),
                           ),
-                          style: const TextStyle(fontSize: 13),
+                          style: context.textTheme.bodySmall,
                           onChanged: (value) {
                             controller.updateTestValue(index, value);
                           },
@@ -230,7 +227,7 @@ class TestsTab extends StatelessWidget {
             child: OutlinedButton.icon(
               onPressed: () => controller.addTest(),
               icon: const Icon(Icons.add, size: 18),
-              label: const Text('Add Test'),
+              label: Text('Add Test', style: context.textTheme.bodyMedium),
             ),
           ),
         ),

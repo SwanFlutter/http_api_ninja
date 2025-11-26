@@ -31,7 +31,7 @@ class PreRunTab extends StatelessWidget {
               Expanded(
                 child: Text(
                   'Write JavaScript code to run before the request',
-                  style: TextStyle(fontSize: 12, color: Colors.blue[700]),
+                  style: context.textTheme.labelSmall?.copyWith(color: Colors.blue[700]),
                 ),
               ),
             ],
@@ -63,7 +63,7 @@ class PreRunTab extends StatelessWidget {
               ),
               maxLines: null,
               expands: true,
-              style: const TextStyle(fontFamily: 'Courier', fontSize: 13),
+              style: context.textTheme.bodySmall?.copyWith(fontFamily: 'Courier'),
               onChanged: (value) => controller.preRunScript.value = value,
             ),
           ),
@@ -90,7 +90,7 @@ env.set('timestamp', Date.now());
 env.set('requestId', Math.random().toString(36).substring(7));''';
                 },
                 icon: const Icon(Icons.code, size: 16),
-                label: const Text('Insert Example'),
+                label: Text('Insert Example', style: context.textTheme.bodySmall),
               ),
               const SizedBox(width: 8),
               OutlinedButton.icon(
@@ -98,7 +98,7 @@ env.set('requestId', Math.random().toString(36).substring(7));''';
                   controller.preRunScript.value = '';
                 },
                 icon: const Icon(Icons.clear, size: 16),
-                label: const Text('Clear'),
+                label: Text('Clear', style: context.textTheme.bodySmall),
               ),
             ],
           ),

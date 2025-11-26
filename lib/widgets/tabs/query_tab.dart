@@ -30,8 +30,7 @@ class QueryTab extends StatelessWidget {
                 flex: 2,
                 child: Text(
                   'Key',
-                  style: TextStyle(
-                    fontSize: 12,
+                  style: context.textTheme.labelSmall?.copyWith(
                     fontWeight: FontWeight.w600,
                     color: Colors.grey[600],
                   ),
@@ -42,8 +41,7 @@ class QueryTab extends StatelessWidget {
                 flex: 3,
                 child: Text(
                   'Value',
-                  style: TextStyle(
-                    fontSize: 12,
+                  style: context.textTheme.labelSmall?.copyWith(
                     fontWeight: FontWeight.w600,
                     color: Colors.grey[600],
                   ),
@@ -68,7 +66,7 @@ class QueryTab extends StatelessWidget {
                     const SizedBox(height: 16),
                     Text(
                       'No query parameters',
-                      style: TextStyle(color: Colors.grey[400]),
+                      style: context.textTheme.bodyMedium?.copyWith(color: Colors.grey[400]),
                     ),
                   ],
                 ),
@@ -105,7 +103,7 @@ class QueryTab extends StatelessWidget {
                               vertical: 8,
                             ),
                           ),
-                          style: const TextStyle(fontSize: 13),
+                          style: context.textTheme.bodySmall,
                           onChanged: (value) {
                             controller.updateQueryParam(
                               entry.key,
@@ -128,7 +126,7 @@ class QueryTab extends StatelessWidget {
                               vertical: 8,
                             ),
                           ),
-                          style: const TextStyle(fontSize: 13),
+                          style: context.textTheme.bodySmall,
                           onChanged: (value) {
                             controller.queryParams[entry.key] = value;
                           },
@@ -165,7 +163,7 @@ class QueryTab extends StatelessWidget {
             child: OutlinedButton.icon(
               onPressed: () => controller.addQueryParam(),
               icon: const Icon(Icons.add, size: 18),
-              label: const Text('Add Parameter'),
+              label: Text('Add Parameter', style: context.textTheme.bodyMedium),
             ),
           ),
         ),

@@ -4,6 +4,8 @@ import 'package:get_x_master/get_x_master.dart';
 import '../I18n/messages.dart';
 import '../controller/http_controller.dart';
 import '../models/http_request_model.dart';
+import 'environment_tab.dart';
+import 'history_tab.dart';
 import 'settings_dialog.dart';
 
 class SidebarWidget extends StatelessWidget {
@@ -40,7 +42,9 @@ class SidebarWidget extends StatelessWidget {
                         borderRadius: BorderRadius.circular(4),
                       ),
                     ),
-                    child: Text(Messages.newRequest.tr),
+                    child: Text(Messages.newRequest.tr, style: context.textTheme.bodyMedium?.copyWith(
+                      color: Get.isDarkMode ? Colors.white : Colors.white,
+                    ),),
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -50,7 +54,7 @@ class SidebarWidget extends StatelessWidget {
                     onPressed: () =>
                         _showNewCollectionDialog(context, controller),
                     icon: const Icon(Icons.create_new_folder, size: 18),
-                    label: const Text('New Collection'),
+                    label: Text('New Collection', style: context.textTheme.bodyMedium),
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       shape: RoundedRectangleBorder(
@@ -94,8 +98,7 @@ class SidebarWidget extends StatelessWidget {
                               child: Text(
                                 tab.tr,
                                 textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: 13,
+                                style: context.textTheme.labelMedium?.copyWith(
                                   color: isSelected
                                       ? Theme.of(context).primaryColor
                                       : Colors.grey[400],
@@ -117,7 +120,7 @@ class SidebarWidget extends StatelessWidget {
             child: TextField(
               decoration: InputDecoration(
                 hintText: Messages.filterCollections.tr,
-                hintStyle: TextStyle(color: Colors.grey[600], fontSize: 13),
+                hintStyle: context.textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
                 filled: true,
                 fillColor: isDark ? const Color(0xFF3C3C3C) : Colors.white,
                 border: OutlineInputBorder(
@@ -131,16 +134,16 @@ class SidebarWidget extends StatelessWidget {
                   vertical: 10,
                 ),
               ),
-              style: const TextStyle(fontSize: 13),
+              style: context.textTheme.bodySmall,
             ),
           ),
           Expanded(
             child: Obx(() {
               final selectedTab = controller.selectedTab.value;
 
-              // Activity Tab
+              // Activity/History Tab
               if (selectedTab == Messages.activity) {
-                return _buildActivityTab(controller, isDark);
+                return const HistoryTab();
               }
 
               // Collections Tab
@@ -150,7 +153,7 @@ class SidebarWidget extends StatelessWidget {
 
               // Env Tab
               if (selectedTab == Messages.env) {
-                return _buildEnvTab(isDark);
+                return const EnvironmentTab();
               }
 
               return const SizedBox.shrink();
@@ -196,7 +199,7 @@ class SidebarWidget extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('New Collection'),
+        title: Text('New Collection', style: context.textTheme.titleSmall),
         content: TextField(
           controller: nameController,
           decoration: const InputDecoration(
@@ -230,7 +233,7 @@ class SidebarWidget extends StatelessWidget {
       context: context,
       builder: (context) => StatefulBuilder(
         builder: (context, setState) => AlertDialog(
-          title: const Text('New Request'),
+          title: Text('New Request', style: context.textTheme.titleSmall),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -298,102 +301,6 @@ class SidebarWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildActivityTab(HttpController controller, bool isDark) {
-    // Show recent requests from all collections
-    final allRequests = <HttpRequestModel>[];
-    for (var collection in controller.collections) {
-      allRequests.addAll(collection.requests);
-    }
-    allRequests.sort(
-      (a, b) =>
-          (b.lastUsed ?? b.createdAt).compareTo(a.lastUsed ?? a.createdAt),
-    );
-
-    if (allRequests.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.history, size: 48, color: Colors.grey[400]),
-            const SizedBox(height: 16),
-            Text(
-              'No recent activity',
-              style: TextStyle(color: Colors.grey[400]),
-            ),
-          ],
-        ),
-      );
-    }
-
-    return ListView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      itemCount: allRequests.length > 20 ? 20 : allRequests.length,
-      itemBuilder: (context, index) {
-        final req = allRequests[index];
-        final isSelected = controller.selectedRequest.value?.id == req.id;
-
-        return InkWell(
-          onTap: () => controller.selectRequest(req),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-            margin: const EdgeInsets.only(bottom: 4),
-            decoration: BoxDecoration(
-              color: isSelected
-                  ? (isDark
-                        ? const Color(0xFF37373D)
-                        : Colors.blue.withValues(alpha: 0.1))
-                  : Colors.transparent,
-              borderRadius: BorderRadius.circular(4),
-              border: isSelected
-                  ? Border.all(color: Colors.blue, width: 1)
-                  : null,
-            ),
-            child: Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 6,
-                    vertical: 2,
-                  ),
-                  decoration: BoxDecoration(
-                    color: _getMethodColor(req.method).withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(3),
-                  ),
-                  child: Text(
-                    req.method,
-                    style: TextStyle(
-                      fontSize: 11,
-                      color: _getMethodColor(req.method),
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        req.name,
-                        style: const TextStyle(fontSize: 13),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      Text(
-                        req.url.isEmpty ? 'No URL' : req.url,
-                        style: TextStyle(fontSize: 11, color: Colors.grey[600]),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
   Widget _buildCollectionsTab(HttpController controller) {
     return ListView.builder(
       padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -402,31 +309,6 @@ class SidebarWidget extends StatelessWidget {
         final collection = controller.collections[index];
         return _buildCollectionFolder(context, collection, controller);
       },
-    );
-  }
-
-  Widget _buildEnvTab(bool isDark) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.settings_outlined, size: 48, color: Colors.grey[400]),
-          const SizedBox(height: 16),
-          Text(
-            'Environment Variables',
-            style: TextStyle(
-              color: Colors.grey[400],
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Coming soon...',
-            style: TextStyle(color: Colors.grey[500], fontSize: 13),
-          ),
-        ],
-      ),
     );
   }
 
@@ -459,8 +341,7 @@ class SidebarWidget extends StatelessWidget {
                 Expanded(
                   child: Text(
                     collection.name,
-                    style: const TextStyle(
-                      fontSize: 13,
+                    style: context.textTheme.bodySmall?.copyWith(
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -473,6 +354,16 @@ class SidebarWidget extends StatelessWidget {
                   ),
                   itemBuilder: (context) => [
                     const PopupMenuItem(
+                      value: 'rename',
+                      child: Row(
+                        children: [
+                          Icon(Icons.edit, size: 16, color: Colors.blue),
+                          SizedBox(width: 8),
+                          Text('Rename'),
+                        ],
+                      ),
+                    ),
+                    const PopupMenuItem(
                       value: 'delete',
                       child: Row(
                         children: [
@@ -484,7 +375,14 @@ class SidebarWidget extends StatelessWidget {
                     ),
                   ],
                   onSelected: (value) {
-                    if (value == 'delete') {
+                    if (value == 'rename') {
+                      _showRenameCollectionDialog(
+                        context,
+                        controller,
+                        collection.id,
+                        collection.name,
+                      );
+                    } else if (value == 'delete') {
                       _showDeleteCollectionDialog(
                         context,
                         controller,
@@ -591,6 +489,41 @@ class SidebarWidget extends StatelessWidget {
     );
   }
 
+  void _showRenameCollectionDialog(
+    BuildContext context,
+    HttpController controller,
+    String collectionId,
+    String currentName,
+  ) {
+    final nameController = TextEditingController(text: currentName);
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Rename Collection', style: context.textTheme.titleSmall),
+        content: TextField(
+          controller: nameController,
+          decoration: const InputDecoration(
+            labelText: 'Collection Name',
+            hintText: 'Enter new name',
+          ),
+          autofocus: true,
+        ),
+        actions: [
+          TextButton(onPressed: () => Get.back(), child: const Text('Cancel')),
+          ElevatedButton(
+            onPressed: () {
+              if (nameController.text.isNotEmpty) {
+                controller.renameCollection(collectionId, nameController.text);
+                Get.back();
+              }
+            },
+            child: const Text('Rename'),
+          ),
+        ],
+      ),
+    );
+  }
+
   void _showDeleteCollectionDialog(
     BuildContext context,
     HttpController controller,
@@ -599,8 +532,8 @@ class SidebarWidget extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Delete Collection'),
-        content: const Text('Are you sure you want to delete this collection?'),
+        title: Text('Delete Collection', style: context.textTheme.titleSmall),
+        content: Text('Are you sure you want to delete this collection?', style: context.textTheme.bodyMedium),
         actions: [
           TextButton(onPressed: () => Get.back(), child: const Text('Cancel')),
           ElevatedButton(

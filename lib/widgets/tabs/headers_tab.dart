@@ -31,8 +31,7 @@ class HeadersTab extends StatelessWidget {
                 flex: 2,
                 child: Text(
                   'Key',
-                  style: TextStyle(
-                    fontSize: 12,
+                  style: context.textTheme.labelSmall?.copyWith(
                     fontWeight: FontWeight.w600,
                     color: Colors.grey[600],
                   ),
@@ -43,8 +42,7 @@ class HeadersTab extends StatelessWidget {
                 flex: 3,
                 child: Text(
                   'Value',
-                  style: TextStyle(
-                    fontSize: 12,
+                  style: context.textTheme.labelSmall?.copyWith(
                     fontWeight: FontWeight.w600,
                     color: Colors.grey[600],
                   ),
@@ -69,7 +67,7 @@ class HeadersTab extends StatelessWidget {
                     const SizedBox(height: 16),
                     Text(
                       'No headers',
-                      style: TextStyle(color: Colors.grey[400]),
+                      style: context.textTheme.bodyMedium?.copyWith(color: Colors.grey[400]),
                     ),
                   ],
                 ),
@@ -114,7 +112,7 @@ class HeadersTab extends StatelessWidget {
                               vertical: 8,
                             ),
                           ),
-                          style: const TextStyle(fontSize: 13),
+                          style: context.textTheme.bodySmall,
                           onChanged: (value) {
                             controller.updateHeaderKey(index, value);
                           },
@@ -135,7 +133,7 @@ class HeadersTab extends StatelessWidget {
                               vertical: 8,
                             ),
                           ),
-                          style: const TextStyle(fontSize: 13),
+                          style: context.textTheme.bodySmall,
                           onChanged: (value) {
                             controller.updateHeaderValue(index, value);
                           },
@@ -172,7 +170,7 @@ class HeadersTab extends StatelessWidget {
             child: OutlinedButton.icon(
               onPressed: () => controller.addHeader(),
               icon: const Icon(Icons.add, size: 18),
-              label: const Text('Add Header'),
+              label: Text('Add Header', style: context.textTheme.bodyMedium),
             ),
           ),
         ),

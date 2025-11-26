@@ -70,10 +70,7 @@ class WelcomeScreenWidget extends StatelessWidget {
                 // App Title
                 Text(
                   'HTTP API Ninja',
-                  style: TextStyle(
-                    fontSize: 42,
-                    fontWeight: FontWeight.bold,
-                    color: isDark ? Colors.white : Colors.black87,
+                  style: context.textTheme.displaySmall?.copyWith(
                     letterSpacing: 1.5,
                   ),
                 ),
@@ -83,8 +80,7 @@ class WelcomeScreenWidget extends StatelessWidget {
                 // Subtitle
                 Text(
                   'A powerful HTTP client for developers',
-                  style: TextStyle(
-                    fontSize: 16,
+                  style: context.textTheme.bodyMedium?.copyWith(
                     color: isDark ? Colors.grey[400] : Colors.grey[600],
                     letterSpacing: 0.5,
                   ),
@@ -156,9 +152,8 @@ class WelcomeScreenWidget extends StatelessWidget {
                       Flexible(
                         child: Text(
                           'Tip: Select a request from the sidebar or create a new one to get started',
-                          style: TextStyle(
+                          style: context.textTheme.bodySmall?.copyWith(
                             color: isDark ? Colors.blue[200] : Colors.blue[700],
-                            fontSize: 13,
                           ),
                         ),
                       ),
@@ -213,18 +208,15 @@ class WelcomeScreenWidget extends StatelessWidget {
           const SizedBox(height: 16),
           Text(
             title,
-            style: TextStyle(
-              fontSize: 15,
+            style: context.textTheme.bodyMedium?.copyWith(
               fontWeight: FontWeight.bold,
-              color: isDark ? Colors.white : Colors.black87,
             ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 8),
           Text(
             subtitle,
-            style: TextStyle(
-              fontSize: 12,
+            style: context.textTheme.labelSmall?.copyWith(
               color: isDark ? Colors.grey[400] : Colors.grey[600],
             ),
             textAlign: TextAlign.center,
