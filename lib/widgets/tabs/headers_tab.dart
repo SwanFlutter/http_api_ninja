@@ -8,7 +8,7 @@ class HeadersTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<HttpController>();
+    final controller = Get.smartFind<HttpController>();
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Column(
@@ -67,7 +67,9 @@ class HeadersTab extends StatelessWidget {
                     const SizedBox(height: 16),
                     Text(
                       'No headers',
-                      style: context.textTheme.bodyMedium?.copyWith(color: Colors.grey[400]),
+                      style: context.textTheme.bodyMedium?.copyWith(
+                        color: Colors.grey[400],
+                      ),
                     ),
                   ],
                 ),

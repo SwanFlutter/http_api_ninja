@@ -10,7 +10,7 @@ class TerminalWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<HttpController>();
+    final controller = Get.smartFind<HttpController>();
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(

@@ -23,7 +23,7 @@ class _BodyTabState extends State<BodyTab> {
   @override
   void initState() {
     super.initState();
-    _controller = Get.find<HttpController>();
+    _controller = Get.smartFind<HttpController>();
     _jsonController = TextEditingController(text: _controller.body.value);
     _xmlController = TextEditingController(text: _controller.body.value);
     _textController = TextEditingController(text: _controller.body.value);
@@ -127,7 +127,9 @@ class _BodyTabState extends State<BodyTab> {
           const SizedBox(height: 16),
           Text(
             'No Body',
-            style: context.textTheme.bodyMedium?.copyWith(color: Colors.grey[400]),
+            style: context.textTheme.bodyMedium?.copyWith(
+              color: Colors.grey[400],
+            ),
           ),
         ],
       ),
@@ -178,7 +180,9 @@ class _BodyTabState extends State<BodyTab> {
               ),
               maxLines: null,
               expands: true,
-              style: context.textTheme.bodySmall?.copyWith(fontFamily: 'Courier'),
+              style: context.textTheme.bodySmall?.copyWith(
+                fontFamily: 'Courier',
+              ),
               onChanged: (value) => _controller.body.value = value,
             ),
           ),
@@ -293,9 +297,12 @@ class _BodyTabState extends State<BodyTab> {
                   field: field,
                   isDark: isDark,
                   onToggle: () => _controller.toggleFormData(index),
-                  onKeyChanged: (value) => _controller.updateFormDataKey(index, value),
-                  onValueChanged: (value) => _controller.updateFormDataValue(index, value),
-                  onTypeChanged: (value) => _controller.updateFormDataType(index, value),
+                  onKeyChanged: (value) =>
+                      _controller.updateFormDataKey(index, value),
+                  onValueChanged: (value) =>
+                      _controller.updateFormDataValue(index, value),
+                  onTypeChanged: (value) =>
+                      _controller.updateFormDataType(index, value),
                   onDelete: () => _controller.removeFormData(index),
                 );
               },
@@ -354,7 +361,9 @@ class _BodyTabState extends State<BodyTab> {
                     ),
                     maxLines: null,
                     expands: true,
-                    style: context.textTheme.bodySmall?.copyWith(fontFamily: 'Courier'),
+                    style: context.textTheme.bodySmall?.copyWith(
+                      fontFamily: 'Courier',
+                    ),
                   ),
                 ),
               ],
@@ -386,7 +395,9 @@ class _BodyTabState extends State<BodyTab> {
                     ),
                     maxLines: null,
                     expands: true,
-                    style: context.textTheme.bodySmall?.copyWith(fontFamily: 'Courier'),
+                    style: context.textTheme.bodySmall?.copyWith(
+                      fontFamily: 'Courier',
+                    ),
                   ),
                 ),
               ],
@@ -456,10 +467,7 @@ class _FormDataRowState extends State<_FormDataRow> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 12,
-        vertical: 8,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
@@ -515,11 +523,10 @@ class _FormDataRowState extends State<_FormDataRow> {
           const SizedBox(width: 8),
           DropdownButton<String>(
             value: widget.field['type'],
-            items: ['text', 'file']
-                .map(
-                  (e) => DropdownMenuItem(value: e, child: Text(e)),
-                )
-                .toList(),
+            items: [
+              'text',
+              'file',
+            ].map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
             onChanged: (value) => widget.onTypeChanged(value!),
           ),
           IconButton(
@@ -532,4 +539,3 @@ class _FormDataRowState extends State<_FormDataRow> {
     );
   }
 }
-

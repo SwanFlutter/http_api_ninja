@@ -10,8 +10,9 @@ class SettingsDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeController = Get.find<ThemeController>();
-    final localeController = Get.find<LocaleController>();
+    final themeController = Get.smartFind<ThemeController>();
+    final localeController = Get.smartFind<LocaleController>();
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return AlertDialog(
       title: Text(Messages.settings.tr),
@@ -30,19 +31,28 @@ class SettingsDialog extends StatelessWidget {
               () => Row(
                 children: [
                   Expanded(
-                    child: RadioListTile<ThemeMode>(
-                      title: Text(Messages.lightMode.tr),
-                      value: ThemeMode.light,
-                      groupValue: themeController.themeMode.value,
-                      onChanged: (value) => themeController.setTheme(value!),
+                    child: _buildThemeButton(
+                      context: context,
+                      icon: Icons.light_mode,
+                      label: Messages.lightMode.tr,
+                      isSelected:
+                          themeController.appThemeMode.value ==
+                          AvailableTheme.light,
+                      onTap: () => themeController.setLight(),
+                      isDark: isDark,
                     ),
                   ),
+                  const SizedBox(width: 12),
                   Expanded(
-                    child: RadioListTile<ThemeMode>(
-                      title: Text(Messages.darkMode.tr),
-                      value: ThemeMode.dark,
-                      groupValue: themeController.themeMode.value,
-                      onChanged: (value) => themeController.setTheme(value!),
+                    child: _buildThemeButton(
+                      context: context,
+                      icon: Icons.dark_mode,
+                      label: Messages.darkMode.tr,
+                      isSelected:
+                          themeController.appThemeMode.value ==
+                          AvailableTheme.dark,
+                      onTap: () => themeController.setDark(),
+                      isDark: isDark,
                     ),
                   ),
                 ],
@@ -56,7 +66,7 @@ class SettingsDialog extends StatelessWidget {
             const SizedBox(height: 12),
             Obx(
               () => DropdownButtonFormField<Locale>(
-                value: localeController.currentLocale.value,
+                initialValue: localeController.currentLocale.value,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   contentPadding: EdgeInsets.symmetric(
@@ -85,6 +95,54 @@ class SettingsDialog extends StatelessWidget {
       actions: [
         TextButton(onPressed: () => Get.back(), child: const Text('Close')),
       ],
+    );
+  }
+
+  Widget _buildThemeButton({
+    required BuildContext context,
+    required IconData icon,
+    required String label,
+    required bool isSelected,
+    required VoidCallback onTap,
+    required bool isDark,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(8),
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? Theme.of(context).primaryColor.withOpacity(0.1)
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(
+            color: isSelected
+                ? Theme.of(context).primaryColor
+                : (isDark ? Colors.grey[600]! : Colors.grey[400]!),
+            width: isSelected ? 2 : 1,
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              icon,
+              color: isSelected
+                  ? Theme.of(context).primaryColor
+                  : (isDark ? Colors.grey[400] : Colors.grey[600]),
+            ),
+            const SizedBox(width: 8),
+            Text(
+              label,
+              style: TextStyle(
+                color: isSelected ? Theme.of(context).primaryColor : null,
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

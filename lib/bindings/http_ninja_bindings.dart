@@ -7,8 +7,8 @@ import '../controller/theme_controller.dart';
 class HttpNinjaBindings implements Bindings {
   @override
   void dependencies() {
-    Get.lazyPut(() => HttpController());
-    Get.lazyPut(() => ThemeController());
-    Get.lazyPut(() => LocaleController());
+    Get.smartLazyPut(() => HttpController());
+    Get.smartLazyPut(() => ThemeController());
+    Get.smartLazyPut(() => LocaleController());
   }
 }

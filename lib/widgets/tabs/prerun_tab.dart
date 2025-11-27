@@ -8,7 +8,7 @@ class PreRunTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<HttpController>();
+    final controller = Get.smartFind<HttpController>();
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Column(
@@ -17,7 +17,7 @@ class PreRunTab extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: Colors.blue.withOpacity(0.1),
+            color: Colors.blue.withValues(alpha: 0.1),
             border: Border(
               bottom: BorderSide(
                 color: isDark ? Colors.grey[800]! : Colors.grey[300]!,
@@ -31,7 +31,9 @@ class PreRunTab extends StatelessWidget {
               Expanded(
                 child: Text(
                   'Write JavaScript code to run before the request',
-                  style: context.textTheme.labelSmall?.copyWith(color: Colors.blue[700]),
+                  style: context.textTheme.labelSmall?.copyWith(
+                    color: Colors.blue[700],
+                  ),
                 ),
               ),
             ],
@@ -63,7 +65,9 @@ class PreRunTab extends StatelessWidget {
               ),
               maxLines: null,
               expands: true,
-              style: context.textTheme.bodySmall?.copyWith(fontFamily: 'Courier'),
+              style: context.textTheme.bodySmall?.copyWith(
+                fontFamily: 'Courier',
+              ),
               onChanged: (value) => controller.preRunScript.value = value,
             ),
           ),
@@ -90,7 +94,10 @@ env.set('timestamp', Date.now());
 env.set('requestId', Math.random().toString(36).substring(7));''';
                 },
                 icon: const Icon(Icons.code, size: 16),
-                label: Text('Insert Example', style: context.textTheme.bodySmall),
+                label: Text(
+                  'Insert Example',
+                  style: context.textTheme.bodySmall,
+                ),
               ),
               const SizedBox(width: 8),
               OutlinedButton.icon(

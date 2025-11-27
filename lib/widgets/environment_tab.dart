@@ -10,14 +10,14 @@ class EnvironmentTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<HttpController>();
+    final controller = Get.smartFind<HttpController>();
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Column(
       children: [
         // Environment selector and actions
         _buildHeader(context, controller, isDark),
-        
+
         // Tabs for Environment and Global variables
         Expanded(
           child: DefaultTabController(
@@ -47,7 +47,11 @@ class EnvironmentTab extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader(BuildContext context, HttpController controller, bool isDark) {
+  Widget _buildHeader(
+    BuildContext context,
+    HttpController controller,
+    bool isDark,
+  ) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -60,46 +64,60 @@ class EnvironmentTab extends StatelessWidget {
       child: Column(
         children: [
           // Environment dropdown
-          Obx(() => DropdownButtonFormField<String>(
-            value: controller.activeEnvironment.value?.id,
-            decoration: InputDecoration(
-              labelText: 'Active Environment',
-              labelStyle: context.textTheme.labelSmall,
-              border: const OutlineInputBorder(),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              prefixIcon: Icon(
-                Icons.cloud_outlined,
-                size: 18,
-                color: controller.activeEnvironment.value != null
-                    ? Colors.green
-                    : Colors.grey,
+          Obx(
+            () => DropdownButtonFormField<String>(
+              initialValue: controller.activeEnvironment.value?.id,
+              decoration: InputDecoration(
+                labelText: 'Active Environment',
+                labelStyle: context.textTheme.labelSmall,
+                border: const OutlineInputBorder(),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 8,
+                ),
+                prefixIcon: Icon(
+                  Icons.cloud_outlined,
+                  size: 18,
+                  color: controller.activeEnvironment.value != null
+                      ? Colors.green
+                      : Colors.grey,
+                ),
               ),
+              items: controller.environments
+                  .map(
+                    (env) => DropdownMenuItem(
+                      value: env.id,
+                      child: Row(
+                        children: [
+                          if (env.isActive)
+                            const Icon(
+                              Icons.check_circle,
+                              size: 14,
+                              color: Colors.green,
+                            ),
+                          if (env.isActive) const SizedBox(width: 8),
+                          Text(env.name, style: context.textTheme.bodySmall),
+                        ],
+                      ),
+                    ),
+                  )
+                  .toList(),
+              onChanged: (value) {
+                if (value != null) {
+                  controller.setActiveEnvironment(value);
+                }
+              },
             ),
-            items: controller.environments.map((env) => DropdownMenuItem(
-              value: env.id,
-              child: Row(
-                children: [
-                  if (env.isActive)
-                    const Icon(Icons.check_circle, size: 14, color: Colors.green),
-                  if (env.isActive) const SizedBox(width: 8),
-                  Text(env.name, style: context.textTheme.bodySmall),
-                ],
-              ),
-            )).toList(),
-            onChanged: (value) {
-              if (value != null) {
-                controller.setActiveEnvironment(value);
-              }
-            },
-          )),
+          ),
           const SizedBox(height: 8),
-          
+
           // Action buttons
           Row(
             children: [
               Expanded(
                 child: OutlinedButton.icon(
-                  onPressed: () => _showAddEnvironmentDialog(context, controller),
+                  onPressed: () =>
+                      _showAddEnvironmentDialog(context, controller),
                   icon: const Icon(Icons.add, size: 16),
                   label: Text('New', style: context.textTheme.labelSmall),
                   style: OutlinedButton.styleFrom(
@@ -132,7 +150,7 @@ class EnvironmentTab extends StatelessWidget {
   ) {
     return Obx(() {
       final activeEnv = controller.activeEnvironment.value;
-      
+
       if (activeEnv == null) {
         return Center(
           child: Column(
@@ -142,7 +160,9 @@ class EnvironmentTab extends StatelessWidget {
               const SizedBox(height: 16),
               Text(
                 'No environment selected',
-                style: context.textTheme.bodyMedium?.copyWith(color: Colors.grey[400]),
+                style: context.textTheme.bodyMedium?.copyWith(
+                  color: Colors.grey[400],
+                ),
               ),
             ],
           ),
@@ -179,21 +199,26 @@ class EnvironmentTab extends StatelessWidget {
                 IconButton(
                   icon: const Icon(Icons.edit, size: 16),
                   onPressed: () => _showRenameEnvironmentDialog(
-                    context, controller, activeEnv,
+                    context,
+                    controller,
+                    activeEnv,
                   ),
                   tooltip: 'Rename',
                   visualDensity: VisualDensity.compact,
                 ),
                 IconButton(
                   icon: const Icon(Icons.download, size: 16),
-                  onPressed: () => _exportEnvironment(context, controller, activeEnv.id),
+                  onPressed: () =>
+                      _exportEnvironment(context, controller, activeEnv.id),
                   tooltip: 'Export',
                   visualDensity: VisualDensity.compact,
                 ),
                 IconButton(
                   icon: const Icon(Icons.delete, size: 16, color: Colors.red),
                   onPressed: () => _showDeleteEnvironmentDialog(
-                    context, controller, activeEnv.id,
+                    context,
+                    controller,
+                    activeEnv.id,
                   ),
                   tooltip: 'Delete',
                   visualDensity: VisualDensity.compact,
@@ -201,7 +226,7 @@ class EnvironmentTab extends StatelessWidget {
               ],
             ),
           ),
-          
+
           // Add variable button
           Padding(
             padding: const EdgeInsets.all(8),
@@ -209,14 +234,20 @@ class EnvironmentTab extends StatelessWidget {
               width: double.infinity,
               child: OutlinedButton.icon(
                 onPressed: () => _showAddVariableDialog(
-                  context, controller, activeEnv.id, false,
+                  context,
+                  controller,
+                  activeEnv.id,
+                  false,
                 ),
                 icon: const Icon(Icons.add, size: 16),
-                label: Text('Add Variable', style: context.textTheme.labelSmall),
+                label: Text(
+                  'Add Variable',
+                  style: context.textTheme.labelSmall,
+                ),
               ),
             ),
           ),
-          
+
           // Variables list
           Expanded(
             child: variables.isEmpty
@@ -256,7 +287,8 @@ class EnvironmentTab extends StatelessWidget {
     bool isDark,
   ) {
     return Obx(() {
-      final variables = controller.globalVariables.value.variables.entries.toList();
+      final variables = controller.globalVariables.value.variables.entries
+          .toList();
 
       return Column(
         children: [
@@ -292,22 +324,24 @@ class EnvironmentTab extends StatelessWidget {
               ],
             ),
           ),
-          
+
           // Add variable button
           Padding(
             padding: const EdgeInsets.all(8),
             child: SizedBox(
               width: double.infinity,
               child: OutlinedButton.icon(
-                onPressed: () => _showAddVariableDialog(
-                  context, controller, '', true,
-                ),
+                onPressed: () =>
+                    _showAddVariableDialog(context, controller, '', true),
                 icon: const Icon(Icons.add, size: 16),
-                label: Text('Add Global Variable', style: context.textTheme.labelSmall),
+                label: Text(
+                  'Add Global Variable',
+                  style: context.textTheme.labelSmall,
+                ),
               ),
             ),
           ),
-          
+
           // Variables list
           Expanded(
             child: variables.isEmpty
@@ -401,7 +435,12 @@ class EnvironmentTab extends StatelessWidget {
               IconButton(
                 icon: const Icon(Icons.edit, size: 16),
                 onPressed: () => _showEditVariableDialog(
-                  context, controller, envId, key, value, isGlobal,
+                  context,
+                  controller,
+                  envId,
+                  key,
+                  value,
+                  isGlobal,
                 ),
                 tooltip: 'Edit',
                 visualDensity: VisualDensity.compact,
@@ -425,9 +464,12 @@ class EnvironmentTab extends StatelessWidget {
     );
   }
 
-  void _showAddEnvironmentDialog(BuildContext context, HttpController controller) {
+  void _showAddEnvironmentDialog(
+    BuildContext context,
+    HttpController controller,
+  ) {
     final nameController = TextEditingController();
-    
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -462,7 +504,7 @@ class EnvironmentTab extends StatelessWidget {
     EnvironmentModel env,
   ) {
     final nameController = TextEditingController(text: env.name);
-    
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -497,7 +539,9 @@ class EnvironmentTab extends StatelessWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: Text('Delete Environment', style: context.textTheme.titleSmall),
-        content: const Text('Are you sure you want to delete this environment?'),
+        content: const Text(
+          'Are you sure you want to delete this environment?',
+        ),
         actions: [
           TextButton(onPressed: () => Get.back(), child: const Text('Cancel')),
           ElevatedButton(
@@ -521,7 +565,7 @@ class EnvironmentTab extends StatelessWidget {
   ) {
     final keyController = TextEditingController();
     final valueController = TextEditingController();
-    
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -587,7 +631,7 @@ class EnvironmentTab extends StatelessWidget {
   ) {
     final keyController = TextEditingController(text: oldKey);
     final valueController = TextEditingController(text: oldValue);
-    
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -637,7 +681,7 @@ class EnvironmentTab extends StatelessWidget {
 
   void _showImportDialog(BuildContext context, HttpController controller) {
     final jsonController = TextEditingController();
-    
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(

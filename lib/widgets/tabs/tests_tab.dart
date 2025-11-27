@@ -8,7 +8,7 @@ class TestsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<HttpController>();
+    final controller = Get.smartFind<HttpController>();
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Column(
@@ -81,7 +81,9 @@ class TestsTab extends StatelessWidget {
                     const SizedBox(height: 16),
                     Text(
                       'No tests defined',
-                      style: context.textTheme.bodyMedium?.copyWith(color: Colors.grey[400]),
+                      style: context.textTheme.bodyMedium?.copyWith(
+                        color: Colors.grey[400],
+                      ),
                     ),
                   ],
                 ),
@@ -109,7 +111,7 @@ class TestsTab extends StatelessWidget {
                       Expanded(
                         flex: 2,
                         child: DropdownButtonFormField<String>(
-                          value: test['condition'],
+                          initialValue: test['condition'],
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                             contentPadding: EdgeInsets.symmetric(
@@ -144,7 +146,7 @@ class TestsTab extends StatelessWidget {
                       Expanded(
                         flex: 2,
                         child: DropdownButtonFormField<String>(
-                          value: test['operator'],
+                          initialValue: test['operator'],
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(),
                             contentPadding: EdgeInsets.symmetric(

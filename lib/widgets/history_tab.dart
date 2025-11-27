@@ -9,26 +9,26 @@ class HistoryTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<HttpController>();
+    final controller = Get.smartFind<HttpController>();
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Column(
       children: [
         // Search and filter
         _buildSearchBar(context, controller, isDark),
-        
+
         // Filter chips
         _buildFilterChips(context, controller, isDark),
-        
+
         // History list
         Expanded(
           child: Obx(() {
             final filteredHistory = controller.filteredHistory;
-            
+
             if (filteredHistory.isEmpty) {
               return _buildEmptyState(context, controller);
             }
-            
+
             return ListView.builder(
               padding: const EdgeInsets.symmetric(horizontal: 8),
               itemCount: filteredHistory.length,
@@ -39,7 +39,7 @@ class HistoryTab extends StatelessWidget {
             );
           }),
         ),
-        
+
         // Clear history button
         _buildFooter(context, controller, isDark),
       ],
@@ -56,14 +56,18 @@ class HistoryTab extends StatelessWidget {
       child: TextField(
         decoration: InputDecoration(
           hintText: 'Search history...',
-          hintStyle: context.textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
+          hintStyle: context.textTheme.bodySmall?.copyWith(
+            color: Colors.grey[600],
+          ),
           prefixIcon: const Icon(Icons.search, size: 18),
-          suffixIcon: Obx(() => controller.historySearchQuery.value.isNotEmpty
-              ? IconButton(
-                  icon: const Icon(Icons.clear, size: 18),
-                  onPressed: () => controller.historySearchQuery.value = '',
-                )
-              : const SizedBox.shrink()),
+          suffixIcon: Obx(
+            () => controller.historySearchQuery.value.isNotEmpty
+                ? IconButton(
+                    icon: const Icon(Icons.clear, size: 18),
+                    onPressed: () => controller.historySearchQuery.value = '',
+                  )
+                : const SizedBox.shrink(),
+          ),
           filled: true,
           fillColor: isDark ? const Color(0xFF3C3C3C) : Colors.white,
           border: OutlineInputBorder(
@@ -72,7 +76,10 @@ class HistoryTab extends StatelessWidget {
               color: isDark ? Colors.grey[700]! : Colors.grey[300]!,
             ),
           ),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 12,
+            vertical: 10,
+          ),
         ),
         style: context.textTheme.bodySmall,
         onChanged: (value) => controller.historySearchQuery.value = value,
@@ -86,7 +93,7 @@ class HistoryTab extends StatelessWidget {
     bool isDark,
   ) {
     final methods = ['All', 'GET', 'POST', 'PUT', 'DELETE', 'PATCH'];
-    
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12),
       height: 36,
@@ -107,8 +114,11 @@ class HistoryTab extends StatelessWidget {
                   ),
                 ),
                 selected: isSelected,
-                onSelected: (_) => controller.historyFilterMethod.value = method,
-                backgroundColor: isDark ? const Color(0xFF3C3C3C) : Colors.grey[200],
+                onSelected: (_) =>
+                    controller.historyFilterMethod.value = method,
+                backgroundColor: isDark
+                    ? const Color(0xFF3C3C3C)
+                    : Colors.grey[200],
                 selectedColor: _getMethodColor(method),
                 visualDensity: VisualDensity.compact,
                 padding: const EdgeInsets.symmetric(horizontal: 4),
@@ -145,7 +155,10 @@ class HistoryTab extends StatelessWidget {
               children: [
                 // Method badge
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 6,
+                    vertical: 2,
+                  ),
                   decoration: BoxDecoration(
                     color: _getMethodColor(item.method).withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(3),
@@ -160,11 +173,14 @@ class HistoryTab extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 8),
-                
+
                 // Status badge
                 if (item.statusCode != null)
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 6,
+                      vertical: 2,
+                    ),
                     decoration: BoxDecoration(
                       color: item.isSuccess
                           ? Colors.green.withValues(alpha: 0.2)
@@ -180,9 +196,9 @@ class HistoryTab extends StatelessWidget {
                       ),
                     ),
                   ),
-                
+
                 const Spacer(),
-                
+
                 // Time ago
                 Text(
                   item.formattedTime,
@@ -190,7 +206,7 @@ class HistoryTab extends StatelessWidget {
                     color: Colors.grey[500],
                   ),
                 ),
-                
+
                 // Delete button
                 IconButton(
                   icon: const Icon(Icons.close, size: 14),
@@ -201,7 +217,7 @@ class HistoryTab extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 8),
-            
+
             // URL
             Text(
               item.url,
@@ -209,7 +225,7 @@ class HistoryTab extends StatelessWidget {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
-            
+
             // Request name if available
             if (item.requestName != null) ...[
               const SizedBox(height: 4),
@@ -220,7 +236,7 @@ class HistoryTab extends StatelessWidget {
                 ),
               ),
             ],
-            
+
             // Response info
             if (item.responseTime != null || item.responseSize != null) ...[
               const SizedBox(height: 8),
@@ -268,12 +284,16 @@ class HistoryTab extends StatelessWidget {
                     controller.historyFilterMethod.value != 'All'
                 ? 'No matching requests'
                 : 'No request history',
-            style: context.textTheme.bodyMedium?.copyWith(color: Colors.grey[400]),
+            style: context.textTheme.bodyMedium?.copyWith(
+              color: Colors.grey[400],
+            ),
           ),
           const SizedBox(height: 8),
           Text(
             'Send a request to see it here',
-            style: context.textTheme.bodySmall?.copyWith(color: Colors.grey[500]),
+            style: context.textTheme.bodySmall?.copyWith(
+              color: Colors.grey[500],
+            ),
           ),
         ],
       ),
@@ -287,7 +307,7 @@ class HistoryTab extends StatelessWidget {
   ) {
     return Obx(() {
       if (controller.history.isEmpty) return const SizedBox.shrink();
-      
+
       return Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
@@ -321,10 +341,7 @@ class HistoryTab extends StatelessWidget {
                 ],
               ),
               itemBuilder: (context) => [
-                const PopupMenuItem(
-                  value: 'all',
-                  child: Text('Clear All'),
-                ),
+                const PopupMenuItem(value: 'all', child: Text('Clear All')),
                 const PopupMenuItem(
                   value: 'day',
                   child: Text('Clear older than 1 day'),
@@ -354,7 +371,10 @@ class HistoryTab extends StatelessWidget {
     });
   }
 
-  void _showClearHistoryDialog(BuildContext context, HttpController controller) {
+  void _showClearHistoryDialog(
+    BuildContext context,
+    HttpController controller,
+  ) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(

@@ -13,7 +13,7 @@ class SidebarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<HttpController>();
+    final controller = Get.smartFind<HttpController>();
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
@@ -42,9 +42,12 @@ class SidebarWidget extends StatelessWidget {
                         borderRadius: BorderRadius.circular(4),
                       ),
                     ),
-                    child: Text(Messages.newRequest.tr, style: context.textTheme.bodyMedium?.copyWith(
-                      color: Get.isDarkMode ? Colors.white : Colors.white,
-                    ),),
+                    child: Text(
+                      Messages.newRequest.tr,
+                      style: context.textTheme.bodyMedium?.copyWith(
+                        color: Get.isDarkMode ? Colors.white : Colors.white,
+                      ),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -54,7 +57,10 @@ class SidebarWidget extends StatelessWidget {
                     onPressed: () =>
                         _showNewCollectionDialog(context, controller),
                     icon: const Icon(Icons.create_new_folder, size: 18),
-                    label: Text('New Collection', style: context.textTheme.bodyMedium),
+                    label: Text(
+                      'New Collection',
+                      style: context.textTheme.bodyMedium,
+                    ),
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       shape: RoundedRectangleBorder(
@@ -120,7 +126,9 @@ class SidebarWidget extends StatelessWidget {
             child: TextField(
               decoration: InputDecoration(
                 hintText: Messages.filterCollections.tr,
-                hintStyle: context.textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
+                hintStyle: context.textTheme.bodySmall?.copyWith(
+                  color: Colors.grey[600],
+                ),
                 filled: true,
                 fillColor: isDark ? const Color(0xFF3C3C3C) : Colors.white,
                 border: OutlineInputBorder(
@@ -533,7 +541,10 @@ class SidebarWidget extends StatelessWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: Text('Delete Collection', style: context.textTheme.titleSmall),
-        content: Text('Are you sure you want to delete this collection?', style: context.textTheme.bodyMedium),
+        content: Text(
+          'Are you sure you want to delete this collection?',
+          style: context.textTheme.bodyMedium,
+        ),
         actions: [
           TextButton(onPressed: () => Get.back(), child: const Text('Cancel')),
           ElevatedButton(

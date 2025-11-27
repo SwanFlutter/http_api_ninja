@@ -16,7 +16,7 @@ class RequestBuilderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<HttpController>();
+    final controller = Get.smartFind<HttpController>();
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Obx(() {
@@ -218,16 +218,19 @@ class RequestBuilderWidget extends StatelessWidget {
                                           children: [
                                             Text(
                                               tab.tr,
-                                              style: context.textTheme.labelMedium?.copyWith(
-                                                color: isSelected
-                                                    ? Theme.of(
-                                                        context,
-                                                      ).primaryColor
-                                                    : Colors.grey[400],
-                                                fontWeight: isSelected
-                                                    ? FontWeight.w600
-                                                    : FontWeight.normal,
-                                              ),
+                                              style: context
+                                                  .textTheme
+                                                  .labelMedium
+                                                  ?.copyWith(
+                                                    color: isSelected
+                                                        ? Theme.of(
+                                                            context,
+                                                          ).primaryColor
+                                                        : Colors.grey[400],
+                                                    fontWeight: isSelected
+                                                        ? FontWeight.w600
+                                                        : FontWeight.normal,
+                                                  ),
                                             ),
                                             if (count != null && count > 0)
                                               Padding(

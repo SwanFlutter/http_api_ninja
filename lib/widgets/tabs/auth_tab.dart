@@ -8,7 +8,7 @@ class AuthTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<HttpController>();
+    final controller = Get.smartFind<HttpController>();
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Column(
@@ -81,7 +81,9 @@ class AuthTab extends StatelessWidget {
           const SizedBox(height: 16),
           Text(
             'No Authentication Selected',
-            style: context.textTheme.bodyMedium?.copyWith(color: Colors.grey[400]),
+            style: context.textTheme.bodyMedium?.copyWith(
+              color: Colors.grey[400],
+            ),
           ),
         ],
       ),
@@ -92,10 +94,7 @@ class AuthTab extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Basic Authentication',
-          style: context.textTheme.titleSmall,
-        ),
+        Text('Basic Authentication', style: context.textTheme.titleSmall),
         const SizedBox(height: 16),
         TextField(
           decoration: const InputDecoration(
@@ -121,10 +120,7 @@ class AuthTab extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Bearer Token',
-          style: context.textTheme.titleSmall,
-        ),
+        Text('Bearer Token', style: context.textTheme.titleSmall),
         const SizedBox(height: 16),
         TextField(
           decoration: const InputDecoration(
@@ -141,7 +137,7 @@ class AuthTab extends StatelessWidget {
             labelText: 'Prefix',
             border: OutlineInputBorder(),
           ),
-          value: 'Bearer',
+          initialValue: 'Bearer',
           items: [
             'Bearer',
             'Token',
@@ -157,17 +153,14 @@ class AuthTab extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'OAuth 2.0',
-          style: context.textTheme.titleSmall,
-        ),
+        Text('OAuth 2.0', style: context.textTheme.titleSmall),
         const SizedBox(height: 16),
         DropdownButtonFormField<String>(
           decoration: const InputDecoration(
             labelText: 'Grant Type',
             border: OutlineInputBorder(),
           ),
-          value: 'Authorization Code',
+          initialValue: 'Authorization Code',
           items: [
             'Authorization Code',
             'Password',
@@ -227,10 +220,7 @@ class AuthTab extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'API Key',
-          style: context.textTheme.titleSmall,
-        ),
+        Text('API Key', style: context.textTheme.titleSmall),
         const SizedBox(height: 16),
         TextField(
           decoration: const InputDecoration(
@@ -251,7 +241,7 @@ class AuthTab extends StatelessWidget {
             labelText: 'Add to',
             border: OutlineInputBorder(),
           ),
-          value: 'Header',
+          initialValue: 'Header',
           items: [
             'Header',
             'Query Params',

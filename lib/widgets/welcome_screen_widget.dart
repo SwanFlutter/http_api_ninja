@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get_x_master/get_x_master.dart';
 
-import '../controller/theme_controller.dart';
-
 class WelcomeScreenWidget extends StatelessWidget {
   const WelcomeScreenWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final themeController = Get.find<ThemeController>();
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
@@ -38,31 +35,29 @@ class WelcomeScreenWidget extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 // Logo
-                Obx(
-                  () => Image.asset(
-                    themeController.isDark
-                        ? 'assets/logo_dark.png'
-                        : 'assets/logo_dark.png',
-                    width: 180,
-                    height: 180,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Container(
-                        width: 180,
-                        height: 180,
-                        decoration: BoxDecoration(
-                          color: isDark
-                              ? Colors.blue.withValues(alpha: 0.2)
-                              : Colors.blue.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(90),
-                        ),
-                        child: Icon(
-                          Icons.http,
-                          size: 90,
-                          color: Theme.of(context).primaryColor,
-                        ),
-                      );
-                    },
-                  ),
+                Image.asset(
+                  Get.isDarkMode
+                      ? 'assets/logo_light.png'
+                      : 'assets/logo_dark.png',
+                  width: context.width * 0.35,
+                  height: context.height * 0.35,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      width: context.width * 0.35,
+                      height: context.height * 0.35,
+                      decoration: BoxDecoration(
+                        color: isDark
+                            ? Colors.blue.withValues(alpha: 0.2)
+                            : Colors.blue.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(90),
+                      ),
+                      child: Icon(
+                        Icons.http,
+                        size: 90,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    );
+                  },
                 ),
 
                 const SizedBox(height: 40),
@@ -70,7 +65,10 @@ class WelcomeScreenWidget extends StatelessWidget {
                 // App Title
                 Text(
                   'HTTP API Ninja',
-                  style: context.textTheme.displaySmall?.copyWith(
+                  style: TextStyle(
+                    fontSize: 42,
+                    fontWeight: FontWeight.bold,
+                    color: isDark ? Colors.white : Colors.black87,
                     letterSpacing: 1.5,
                   ),
                 ),
@@ -80,7 +78,8 @@ class WelcomeScreenWidget extends StatelessWidget {
                 // Subtitle
                 Text(
                   'A powerful HTTP client for developers',
-                  style: context.textTheme.bodyMedium?.copyWith(
+                  style: TextStyle(
+                    fontSize: 16,
                     color: isDark ? Colors.grey[400] : Colors.grey[600],
                     letterSpacing: 0.5,
                   ),
@@ -143,7 +142,7 @@ class WelcomeScreenWidget extends StatelessWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.lightbulb_outline,
                         color: Colors.blue,
                         size: 20,
@@ -152,8 +151,9 @@ class WelcomeScreenWidget extends StatelessWidget {
                       Flexible(
                         child: Text(
                           'Tip: Select a request from the sidebar or create a new one to get started',
-                          style: context.textTheme.bodySmall?.copyWith(
+                          style: TextStyle(
                             color: isDark ? Colors.blue[200] : Colors.blue[700],
+                            fontSize: 13,
                           ),
                         ),
                       ),
@@ -208,15 +208,18 @@ class WelcomeScreenWidget extends StatelessWidget {
           const SizedBox(height: 16),
           Text(
             title,
-            style: context.textTheme.bodyMedium?.copyWith(
+            style: TextStyle(
+              fontSize: 15,
               fontWeight: FontWeight.bold,
+              color: isDark ? Colors.white : Colors.black87,
             ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 8),
           Text(
             subtitle,
-            style: context.textTheme.labelSmall?.copyWith(
+            style: TextStyle(
+              fontSize: 12,
               color: isDark ? Colors.grey[400] : Colors.grey[600],
             ),
             textAlign: TextAlign.center,
