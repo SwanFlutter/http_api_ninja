@@ -61,7 +61,6 @@ class WelcomeScreenWidget extends StatelessWidget {
                 ),
 
                 const SizedBox(height: 40),
-
                 // App Title
                 Text(
                   'HTTP API Ninja',
