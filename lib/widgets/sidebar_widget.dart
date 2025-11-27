@@ -7,6 +7,7 @@ import '../models/http_request_model.dart';
 import 'environment_tab.dart';
 import 'history_tab.dart';
 import 'settings_dialog.dart';
+import 'update_button_widget.dart';
 
 class SidebarWidget extends StatelessWidget {
   const SidebarWidget({super.key});
@@ -183,6 +184,7 @@ class SidebarWidget extends StatelessWidget {
                   onPressed: () {},
                   color: Colors.grey[400],
                 ),
+                const UpdateButtonWidget(),
                 IconButton(
                   icon: const Icon(Icons.settings_outlined, size: 20),
                   onPressed: () => showDialog(

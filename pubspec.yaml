@@ -37,6 +37,8 @@ dependencies:
   get_x_master: ^0.0.19
   get_x_storage: ^0.0.7
   flutter_code_view: ^0.0.3
+  url_launcher: ^6.3.2
+  path_provider: ^2.1.5
   
 
 dev_dependencies:
