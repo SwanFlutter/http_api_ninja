@@ -8,10 +8,10 @@ A powerful and modern HTTP client built with Flutter and Get_x_master - An alter
 
 ## 📸 Screenshots
 
-<img width="1024" height="1024" alt="logo_dark" src="https://github.com/user-attachments/assets/22234579-8f7f-4e6a-a7f4-c2087fe41eaa" />
 
-<img width="1920" height="1017" alt="30" src="https://github.com/user-attachments/assets/ed47fdea-86eb-435a-ab84-0ea2626e4043" />
+<img width="2816" height="1536" alt="Gemini_Generated_Image_za912jza912jza91" src="https://github.com/user-attachments/assets/1b6cd315-6335-432f-ba57-3231d16d4838" />
 
+<img width="1917" height="1021" alt="Captureerere" src="https://github.com/user-attachments/assets/f7ee53df-aea6-4dc0-baac-496149957871" />
 
 
 ## ✨ Key Features
