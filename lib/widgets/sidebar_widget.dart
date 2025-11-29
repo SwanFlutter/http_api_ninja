@@ -257,6 +257,7 @@ class SidebarWidget extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<String>(
+                style: context.textTheme.bodyMedium,
                 initialValue: selectedMethod,
                 decoration: const InputDecoration(labelText: 'Method'),
                 items: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']
@@ -271,6 +272,8 @@ class SidebarWidget extends StatelessWidget {
               const SizedBox(height: 16),
               Obx(
                 () => DropdownButtonFormField<String>(
+                  initialValue: selectedCollectionId,
+                  style: context.textTheme.bodyMedium,
                   decoration: const InputDecoration(labelText: 'Collection'),
                   items: controller.collections
                       .map(
