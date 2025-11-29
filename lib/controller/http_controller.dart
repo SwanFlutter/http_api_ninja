@@ -94,9 +94,13 @@ class HttpController extends GetXController {
 
   void _loadEnvironments() {
     // Load environments
-    final savedEnvs = storage.readList<Map<String, dynamic>>(key: 'environments');
+    final savedEnvs = storage.readList<Map<String, dynamic>>(
+      key: 'environments',
+    );
     if (savedEnvs != null && savedEnvs.isNotEmpty) {
-      environments.value = savedEnvs.map((e) => EnvironmentModel.fromJson(e)).toList();
+      environments.value = savedEnvs
+          .map((e) => EnvironmentModel.fromJson(e))
+          .toList();
       // Set active environment
       final active = environments.cast<EnvironmentModel>().firstWhere(
         (e) => e.isActive,
@@ -109,7 +113,9 @@ class HttpController extends GetXController {
     }
 
     // Load global variables
-    final savedGlobals = storage.read<Map<String, dynamic>>(key: 'globalVariables');
+    final savedGlobals = storage.read<Map<String, dynamic>>(
+      key: 'globalVariables',
+    );
     if (savedGlobals != null) {
       globalVariables.value = GlobalVariablesModel.fromJson(savedGlobals);
     }
@@ -120,10 +126,7 @@ class HttpController extends GetXController {
       EnvironmentModel(
         id: 'dev',
         name: 'Development',
-        variables: {
-          'base_url': 'http://localhost:3000',
-          'api_version': 'v1',
-        },
+        variables: {'base_url': 'http://localhost:3000', 'api_version': 'v1'},
         isActive: true,
         createdAt: DateTime.now(),
       ),
@@ -139,10 +142,7 @@ class HttpController extends GetXController {
       EnvironmentModel(
         id: 'prod',
         name: 'Production',
-        variables: {
-          'base_url': 'https://api.example.com',
-          'api_version': 'v1',
-        },
+        variables: {'base_url': 'https://api.example.com', 'api_version': 'v1'},
         createdAt: DateTime.now(),
       ),
     ]);
@@ -158,7 +158,10 @@ class HttpController extends GetXController {
   }
 
   void _saveGlobalVariables() {
-    storage.write(key: 'globalVariables', value: globalVariables.value.toJson());
+    storage.write(
+      key: 'globalVariables',
+      value: globalVariables.value.toJson(),
+    );
   }
 
   void addEnvironment(String name) {
@@ -175,7 +178,9 @@ class HttpController extends GetXController {
   void deleteEnvironment(String id) {
     environments.removeWhere((e) => e.id == id);
     if (activeEnvironment.value?.id == id) {
-      activeEnvironment.value = environments.isNotEmpty ? environments.first : null;
+      activeEnvironment.value = environments.isNotEmpty
+          ? environments.first
+          : null;
       if (activeEnvironment.value != null) {
         setActiveEnvironment(activeEnvironment.value!.id);
       }
@@ -220,7 +225,12 @@ class HttpController extends GetXController {
     }
   }
 
-  void updateEnvironmentVariable(String envId, String oldKey, String newKey, String value) {
+  void updateEnvironmentVariable(
+    String envId,
+    String oldKey,
+    String newKey,
+    String value,
+  ) {
     final index = environments.indexWhere((e) => e.id == envId);
     if (index != -1) {
       final newVars = Map<String, String>.from(environments[index].variables);
@@ -287,17 +297,17 @@ class HttpController extends GetXController {
 
     result = result.replaceAllMapped(regex, (match) {
       final varName = match.group(1)!;
-      
+
       // First check active environment
       if (activeEnvironment.value != null) {
         final envValue = activeEnvironment.value!.getVariable(varName);
         if (envValue != null) return envValue;
       }
-      
+
       // Then check global variables
       final globalValue = globalVariables.value.variables[varName];
       if (globalValue != null) return globalValue;
-      
+
       // Return original if not found
       return match.group(0)!;
     });
@@ -336,7 +346,9 @@ class HttpController extends GetXController {
   void _loadHistory() {
     final savedHistory = storage.readList<Map<String, dynamic>>(key: 'history');
     if (savedHistory != null && savedHistory.isNotEmpty) {
-      history.value = savedHistory.map((h) => HistoryModel.fromJson(h)).toList();
+      history.value = savedHistory
+          .map((h) => HistoryModel.fromJson(h))
+          .toList();
     }
   }
 
@@ -350,12 +362,12 @@ class HttpController extends GetXController {
   void addToHistory(HistoryModel item) {
     // Add to beginning of list
     history.insert(0, item);
-    
+
     // Keep only last 100 items
     if (history.length > 100) {
       history.removeRange(100, history.length);
     }
-    
+
     _saveHistory();
   }
 
@@ -383,21 +395,26 @@ class HttpController extends GetXController {
   /// Get filtered history based on search and method filter
   List<HistoryModel> get filteredHistory {
     var result = history.toList();
-    
+
     // Filter by method
     if (historyFilterMethod.value != 'All') {
-      result = result.where((h) => h.method == historyFilterMethod.value).toList();
+      result = result
+          .where((h) => h.method == historyFilterMethod.value)
+          .toList();
     }
-    
+
     // Filter by search query
     if (historySearchQuery.value.isNotEmpty) {
       final query = historySearchQuery.value.toLowerCase();
-      result = result.where((h) =>
-        h.url.toLowerCase().contains(query) ||
-        (h.requestName?.toLowerCase().contains(query) ?? false)
-      ).toList();
+      result = result
+          .where(
+            (h) =>
+                h.url.toLowerCase().contains(query) ||
+                (h.requestName?.toLowerCase().contains(query) ?? false),
+          )
+          .toList();
     }
-    
+
     return result;
   }
 
@@ -408,7 +425,7 @@ class HttpController extends GetXController {
     headers.value = RxMap<String, String>(item.headers);
     queryParams.value = RxMap<String, String>(item.queryParams);
     body.value = item.body ?? '';
-    
+
     // Sync headers list
     headersList.clear();
     item.headers.forEach((key, value) {
@@ -486,10 +503,11 @@ class HttpController extends GetXController {
       _connect.timeout = const Duration(seconds: 30);
 
       Response? response;
-      // Replace variables in URL and build full URL
+      // Replace variables in URL, apply base URL, and build full URL
       final processedUrl = replaceVariables(url.value);
-      final fullUrl = _buildFullUrl(processedUrl);
-      
+      final urlWithBase = buildUrlWithBase(processedUrl);
+      final fullUrl = _buildFullUrl(urlWithBase);
+
       // Replace variables in headers
       final requestHeaders = <String, String>{};
       headers.forEach((key, value) {
@@ -515,7 +533,7 @@ class HttpController extends GetXController {
       final endTime = DateTime.now();
       final duration = endTime.difference(startTime).inMilliseconds;
 
-    debugPrint('Response status: ${response.statusCode}');
+      debugPrint('Response status: ${response.statusCode}');
 
       // Handle null response
       if (response.statusCode == null) {
@@ -550,21 +568,23 @@ class HttpController extends GetXController {
       final isSuccess = statusCode >= 200 && statusCode < 300;
 
       // Add to history
-      addToHistory(HistoryModel(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        method: httpMethod.value,
-        url: fullUrl,
-        headers: Map<String, String>.from(requestHeaders),
-        queryParams: Map<String, String>.from(queryParams),
-        body: body.value.isNotEmpty ? body.value : null,
-        statusCode: statusCode,
-        statusMessage: response.statusText,
-        responseTime: duration,
-        responseSize: bodySize,
-        timestamp: DateTime.now(),
-        collectionId: selectedRequest.value?.id,
-        requestName: selectedRequest.value?.name,
-      ));
+      addToHistory(
+        HistoryModel(
+          id: DateTime.now().millisecondsSinceEpoch.toString(),
+          method: httpMethod.value,
+          url: fullUrl,
+          headers: Map<String, String>.from(requestHeaders),
+          queryParams: Map<String, String>.from(queryParams),
+          body: body.value.isNotEmpty ? body.value : null,
+          statusCode: statusCode,
+          statusMessage: response.statusText,
+          responseTime: duration,
+          responseSize: bodySize,
+          timestamp: DateTime.now(),
+          collectionId: selectedRequest.value?.id,
+          requestName: selectedRequest.value?.name,
+        ),
+      );
 
       showNotification(
         'Request completed in ${duration}ms - Status: $statusCode',
@@ -616,13 +636,13 @@ class HttpController extends GetXController {
   String _buildFullUrl([String? baseUrl]) {
     final urlToUse = baseUrl ?? url.value;
     if (queryParams.isEmpty) return urlToUse;
-    
+
     // Replace variables in query params
     final processedParams = <String, String>{};
     queryParams.forEach((key, value) {
       processedParams[replaceVariables(key)] = replaceVariables(value);
     });
-    
+
     final uri = Uri.parse(urlToUse);
     final newUri = uri.replace(queryParameters: processedParams);
     return newUri.toString();
@@ -698,14 +718,53 @@ class HttpController extends GetXController {
     }
   }
 
-  void addCollection(String name) {
+  void addCollection(String name, {String? baseUrl}) {
     final collection = CollectionModel(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       name: name,
+      baseUrl: baseUrl,
       requests: [],
     );
     collections.add(collection);
     _saveCollections();
+  }
+
+  void updateCollectionBaseUrl(String collectionId, String? baseUrl) {
+    final index = collections.indexWhere((c) => c.id == collectionId);
+    if (index != -1) {
+      collections[index] = collections[index].copyWith(baseUrl: baseUrl);
+      _saveCollections();
+    }
+  }
+
+  /// Get the base URL for the collection that contains the selected request
+  String? getSelectedRequestBaseUrl() {
+    if (selectedRequest.value == null) return null;
+
+    for (var collection in collections) {
+      if (collection.requests.any((r) => r.id == selectedRequest.value!.id)) {
+        return collection.baseUrl;
+      }
+    }
+    return null;
+  }
+
+  /// Build full URL with collection base URL
+  String buildUrlWithBase(String path) {
+    final baseUrl = getSelectedRequestBaseUrl();
+    if (baseUrl == null || baseUrl.isEmpty) return path;
+
+    // If path already starts with http/https, don't prepend base URL
+    if (path.startsWith('http://') || path.startsWith('https://')) {
+      return path;
+    }
+
+    // Ensure proper URL joining
+    final base = baseUrl.endsWith('/')
+        ? baseUrl.substring(0, baseUrl.length - 1)
+        : baseUrl;
+    final endpoint = path.startsWith('/') ? path : '/$path';
+    return '$base$endpoint';
   }
 
   void addRequest(String collectionId, HttpRequestModel request) {
@@ -860,11 +919,11 @@ class HttpController extends GetXController {
   ) async {
     // Prepare body data based on body type
     dynamic bodyData;
-    
+
     debugPrint('Body type: ${bodyType.value}');
     debugPrint('Body value: "${body.value}"');
     debugPrint('Body isEmpty: ${body.value.isEmpty}');
-    
+
     if (body.value.isNotEmpty && bodyType.value != 'None') {
       switch (bodyType.value) {
         case 'JSON':
@@ -892,7 +951,8 @@ class HttpController extends GetXController {
           // Build form data from formDataList
           final formMap = <String, dynamic>{};
           for (var field in formDataList) {
-            if (field['enabled'] == true && field['key'].toString().isNotEmpty) {
+            if (field['enabled'] == true &&
+                field['key'].toString().isNotEmpty) {
               formMap[field['key']] = field['value'];
             }
           }
@@ -903,7 +963,7 @@ class HttpController extends GetXController {
           bodyData = body.value.isNotEmpty ? body.value : null;
       }
     }
-    
+
     debugPrint('Final bodyData: $bodyData');
     debugPrint('Final headers: $requestHeaders');
 

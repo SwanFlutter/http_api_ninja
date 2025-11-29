@@ -41,113 +41,169 @@ class RequestBuilderWidget extends StatelessWidget {
             // URL Bar
             Padding(
               padding: const EdgeInsets.all(16),
-              child: Row(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    decoration: BoxDecoration(
-                      color: isDark ? const Color(0xFF3C3C3C) : Colors.white,
-                      border: Border.all(
-                        color: isDark ? Colors.grey[700]! : Colors.grey[300]!,
-                      ),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Obx(
-                      () => DropdownButton<String>(
-                        value: controller.httpMethod.value,
-                        underline: const SizedBox(),
-                        dropdownColor: isDark
-                            ? const Color(0xFF3C3C3C)
-                            : Colors.white,
-                        style: context.textTheme.bodySmall?.copyWith(
-                          color: isDark ? Colors.white : Colors.black,
-                          fontWeight: FontWeight.w600,
+                  // Base URL indicator
+                  Obx(() {
+                    final baseUrl = controller.getSelectedRequestBaseUrl();
+                    if (baseUrl != null && baseUrl.isNotEmpty) {
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 8),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.link,
+                              size: 14,
+                              color: Colors.orange[400],
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              'Base URL: ',
+                              style: context.textTheme.labelSmall?.copyWith(
+                                color: Colors.grey[500],
+                              ),
+                            ),
+                            Flexible(
+                              child: Text(
+                                baseUrl,
+                                style: context.textTheme.labelSmall?.copyWith(
+                                  color: Colors.orange[400],
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
                         ),
-                        items: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']
-                            .map(
-                              (method) => DropdownMenuItem(
-                                value: method,
-                                child: Text(
-                                  method,
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    color: isDark ? Colors.white : Colors.black,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ),
-                            )
-                            .toList(),
-                        onChanged: (value) =>
-                            controller.httpMethod.value = value!,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Obx(
-                      () => TextField(
-                        controller:
-                            TextEditingController(text: controller.url.value)
-                              ..selection = TextSelection.fromPosition(
-                                TextPosition(
-                                  offset: controller.url.value.length,
-                                ),
-                              ),
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: isDark
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  }),
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        decoration: BoxDecoration(
+                          color: isDark
                               ? const Color(0xFF3C3C3C)
                               : Colors.white,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(4),
-                            borderSide: BorderSide(
-                              color: isDark
-                                  ? Colors.grey[700]!
-                                  : Colors.grey[300]!,
+                          border: Border.all(
+                            color: isDark
+                                ? Colors.grey[700]!
+                                : Colors.grey[300]!,
+                          ),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Obx(
+                          () => DropdownButton<String>(
+                            value: controller.httpMethod.value,
+                            underline: const SizedBox(),
+                            dropdownColor: isDark
+                                ? const Color(0xFF3C3C3C)
+                                : Colors.white,
+                            style: context.textTheme.bodySmall?.copyWith(
+                              color: isDark ? Colors.white : Colors.black,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            items: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']
+                                .map(
+                                  (method) => DropdownMenuItem(
+                                    value: method,
+                                    child: Text(
+                                      method,
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        color: isDark
+                                            ? Colors.white
+                                            : Colors.black,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                                .toList(),
+                            onChanged: (value) =>
+                                controller.httpMethod.value = value!,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Obx(
+                          () => TextField(
+                            controller:
+                                TextEditingController(
+                                    text: controller.url.value,
+                                  )
+                                  ..selection = TextSelection.fromPosition(
+                                    TextPosition(
+                                      offset: controller.url.value.length,
+                                    ),
+                                  ),
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: isDark
+                                  ? const Color(0xFF3C3C3C)
+                                  : Colors.white,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(4),
+                                borderSide: BorderSide(
+                                  color: isDark
+                                      ? Colors.grey[700]!
+                                      : Colors.grey[300]!,
+                                ),
+                              ),
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 12,
+                              ),
+                              hintText:
+                                  controller.getSelectedRequestBaseUrl() != null
+                                  ? '/endpoint'
+                                  : 'https://api.example.com/endpoint',
+                              hintStyle: context.textTheme.bodySmall?.copyWith(
+                                color: Colors.grey[500],
+                              ),
+                            ),
+                            style: context.textTheme.bodySmall,
+                            onChanged: (value) => controller.url.value = value,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Obx(
+                        () => SizedBox(
+                          height: 45,
+                          child: ElevatedButton.icon(
+                            onPressed: controller.isLoading.value
+                                ? null
+                                : () => controller.sendRequest(),
+                            icon: Icon(
+                              controller.isLoading.value
+                                  ? Icons.hourglass_empty
+                                  : Icons.send,
+                              size: 14,
+                            ),
+                            label: Text(
+                              Messages.send.tr,
+                              style: const TextStyle(fontSize: 12),
+                            ),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.green,
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 20,
+                                vertical: 10,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(4),
+                              ),
                             ),
                           ),
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 12,
-                          ),
-                        ),
-                        style: context.textTheme.bodySmall,
-                        onChanged: (value) => controller.url.value = value,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Obx(
-                    () => SizedBox(
-                      height: 45,
-                      child: ElevatedButton.icon(
-                        onPressed: controller.isLoading.value
-                            ? null
-                            : () => controller.sendRequest(),
-                        icon: Icon(
-                          controller.isLoading.value
-                              ? Icons.hourglass_empty
-                              : Icons.send,
-                          size: 14,
-                        ),
-                        label: Text(
-                          Messages.send.tr,
-                          style: const TextStyle(fontSize: 12),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.green,
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 20,
-                            vertical: 10,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(4),
-                          ),
                         ),
                       ),
-                    ),
+                    ],
                   ),
                 ],
               ),

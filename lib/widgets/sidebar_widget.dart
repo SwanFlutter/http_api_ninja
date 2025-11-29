@@ -206,24 +206,43 @@ class SidebarWidget extends StatelessWidget {
     HttpController controller,
   ) {
     final nameController = TextEditingController();
+    final baseUrlController = TextEditingController();
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: Text('New Collection', style: context.textTheme.titleSmall),
-        content: TextField(
-          controller: nameController,
-          decoration: const InputDecoration(
-            labelText: 'Collection Name',
-            hintText: 'Enter collection name',
-          ),
-          autofocus: true,
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: nameController,
+              decoration: const InputDecoration(
+                labelText: 'Collection Name',
+                hintText: 'Enter collection name',
+              ),
+              autofocus: true,
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: baseUrlController,
+              decoration: const InputDecoration(
+                labelText: 'Base URL (Optional)',
+                hintText: 'https://api.example.com',
+              ),
+            ),
+          ],
         ),
         actions: [
           TextButton(onPressed: () => Get.back(), child: const Text('Cancel')),
           ElevatedButton(
             onPressed: () {
               if (nameController.text.isNotEmpty) {
-                controller.addCollection(nameController.text);
+                controller.addCollection(
+                  nameController.text,
+                  baseUrl: baseUrlController.text.isNotEmpty
+                      ? baseUrlController.text
+                      : null,
+                );
                 Get.back();
               }
             },
@@ -352,11 +371,26 @@ class SidebarWidget extends StatelessWidget {
                 Icon(Icons.folder, size: 16, color: Colors.grey[400]),
                 const SizedBox(width: 8),
                 Expanded(
-                  child: Text(
-                    collection.name,
-                    style: context.textTheme.bodySmall?.copyWith(
-                      fontWeight: FontWeight.w500,
-                    ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        collection.name,
+                        style: context.textTheme.bodySmall?.copyWith(
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      if (collection.baseUrl != null &&
+                          collection.baseUrl!.isNotEmpty)
+                        Text(
+                          collection.baseUrl!,
+                          style: context.textTheme.labelSmall?.copyWith(
+                            color: Colors.orange[400],
+                            fontSize: 10,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                    ],
                   ),
                 ),
                 PopupMenuButton(
@@ -373,6 +407,16 @@ class SidebarWidget extends StatelessWidget {
                           Icon(Icons.edit, size: 16, color: Colors.blue),
                           SizedBox(width: 8),
                           Text('Rename'),
+                        ],
+                      ),
+                    ),
+                    const PopupMenuItem(
+                      value: 'editBaseUrl',
+                      child: Row(
+                        children: [
+                          Icon(Icons.link, size: 16, color: Colors.orange),
+                          SizedBox(width: 8),
+                          Text('Edit Base URL'),
                         ],
                       ),
                     ),
@@ -394,6 +438,13 @@ class SidebarWidget extends StatelessWidget {
                         controller,
                         collection.id,
                         collection.name,
+                      );
+                    } else if (value == 'editBaseUrl') {
+                      _showEditBaseUrlDialog(
+                        context,
+                        controller,
+                        collection.id,
+                        collection.baseUrl,
                       );
                     } else if (value == 'delete') {
                       _showDeleteCollectionDialog(
@@ -531,6 +582,44 @@ class SidebarWidget extends StatelessWidget {
               }
             },
             child: const Text('Rename'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showEditBaseUrlDialog(
+    BuildContext context,
+    HttpController controller,
+    String collectionId,
+    String? currentBaseUrl,
+  ) {
+    final baseUrlController = TextEditingController(text: currentBaseUrl ?? '');
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Edit Base URL', style: context.textTheme.titleSmall),
+        content: TextField(
+          controller: baseUrlController,
+          decoration: const InputDecoration(
+            labelText: 'Base URL',
+            hintText: 'https://api.example.com',
+          ),
+          autofocus: true,
+        ),
+        actions: [
+          TextButton(onPressed: () => Get.back(), child: const Text('Cancel')),
+          ElevatedButton(
+            onPressed: () {
+              controller.updateCollectionBaseUrl(
+                collectionId,
+                baseUrlController.text.isNotEmpty
+                    ? baseUrlController.text
+                    : null,
+              );
+              Get.back();
+            },
+            child: const Text('Save'),
           ),
         ],
       ),
