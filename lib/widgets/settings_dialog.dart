@@ -15,18 +15,20 @@ class SettingsDialog extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return AlertDialog(
-      title: Text(Messages.settings.tr),
+      title: Text(Messages.settings.tr, style: context.textTheme.titleSmall),
       content: SizedBox(
-        width: 400,
+        width: 320,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               Messages.theme.tr,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              style: context.textTheme.labelMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 10),
             Obx(
               () => Row(
                 children: [
@@ -42,7 +44,7 @@ class SettingsDialog extends StatelessWidget {
                       isDark: isDark,
                     ),
                   ),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: 10),
                   Expanded(
                     child: _buildThemeButton(
                       context: context,
@@ -58,27 +60,34 @@ class SettingsDialog extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 18),
             Text(
               Messages.language.tr,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              style: context.textTheme.labelMedium?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 10),
             Obx(
               () => DropdownButtonFormField<Locale>(
                 initialValue: localeController.currentLocale.value,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   contentPadding: EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 8,
+                    horizontal: 10,
+                    vertical: 6,
                   ),
+                  isDense: true,
                 ),
+                style: context.textTheme.bodySmall,
                 items: localeController.supportedLocales
                     .map(
                       (locale) => DropdownMenuItem<Locale>(
                         value: locale['locale'],
-                        child: Text(locale['name']),
+                        child: Text(
+                          locale['name'],
+                          style: context.textTheme.bodySmall,
+                        ),
                       ),
                     )
                     .toList(),
@@ -93,7 +102,10 @@ class SettingsDialog extends StatelessWidget {
         ),
       ),
       actions: [
-        TextButton(onPressed: () => Get.back(), child: const Text('Close')),
+        TextButton(
+          onPressed: () => Get.back(),
+          child: Text('Close', style: context.textTheme.labelSmall),
+        ),
       ],
     );
   }
@@ -108,14 +120,14 @@ class SettingsDialog extends StatelessWidget {
   }) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: BorderRadius.circular(6),
       child: Container(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
         decoration: BoxDecoration(
           color: isSelected
-              ? Theme.of(context).primaryColor.withOpacity(0.1)
+              ? Theme.of(context).primaryColor.withValues(alpha: 0.1)
               : Colors.transparent,
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(6),
           border: Border.all(
             color: isSelected
                 ? Theme.of(context).primaryColor
@@ -128,16 +140,17 @@ class SettingsDialog extends StatelessWidget {
           children: [
             Icon(
               icon,
+              size: 18,
               color: isSelected
                   ? Theme.of(context).primaryColor
                   : (isDark ? Colors.grey[400] : Colors.grey[600]),
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: 6),
             Text(
               label,
-              style: TextStyle(
+              style: context.textTheme.labelSmall?.copyWith(
                 color: isSelected ? Theme.of(context).primaryColor : null,
-                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
               ),
             ),
           ],

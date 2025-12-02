@@ -46,9 +46,20 @@ class UpdateController extends GetXController {
         headers: {'Accept': 'application/vnd.github.v3+json'},
       );
 
+      debugPrint('=== UPDATE CHECK ===');
+      debugPrint('Response status: ${response.statusCode}');
+      debugPrint('Response body: ${response.body}');
+
       if (response.statusCode == 200 && response.body != null) {
         final data = response.body;
-        final tagName = data['tag_name'] as String;
+        final tagName = data['tag_name'] as String?;
+
+        debugPrint('Tag name from GitHub: $tagName');
+
+        if (tagName == null || tagName.isEmpty) {
+          debugPrint('No tag_name found in response');
+          return;
+        }
 
         // Remove 'v' prefix if present
         final version = tagName.startsWith('v')
@@ -57,17 +68,27 @@ class UpdateController extends GetXController {
         latestVersion.value = version;
         releaseNotes.value = data['body'] ?? 'No release notes available';
 
+        debugPrint('Latest version: $version');
+        debugPrint('Current version: $currentVersion');
+        debugPrint('Is newer: ${_isNewerVersion(version, currentVersion)}');
+
         // Find download URL for current platform
-        final assets = data['assets'] as List;
+        final assets = data['assets'] as List? ?? [];
         downloadUrl.value = _findDownloadUrl(assets);
 
         // Compare versions
         if (_isNewerVersion(version, currentVersion)) {
           updateAvailable.value = true;
+          debugPrint('Update available!');
+        } else {
+          debugPrint('No update needed');
         }
+      } else {
+        debugPrint('Failed to get release info');
       }
-    } catch (e) {
+    } catch (e, stack) {
       debugPrint('Error checking for updates: $e');
+      debugPrint('Stack: $stack');
     } finally {
       isChecking.value = false;
     }

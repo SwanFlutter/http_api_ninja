@@ -4,6 +4,7 @@ import 'package:get_x_master/get_x_master.dart';
 import '../I18n/messages.dart';
 import '../controller/http_controller.dart';
 import '../models/http_request_model.dart';
+import 'about_dialog.dart';
 import 'environment_tab.dart';
 import 'history_tab.dart';
 import 'settings_dialog.dart';
@@ -183,8 +184,18 @@ class SidebarWidget extends StatelessWidget {
                   icon: const Icon(Icons.person_outline, size: 20),
                   onPressed: () {},
                   color: Colors.grey[400],
+                  tooltip: 'Profile',
                 ),
                 const UpdateButtonWidget(),
+                IconButton(
+                  icon: const Icon(Icons.info_outline, size: 20),
+                  onPressed: () => showDialog(
+                    context: context,
+                    builder: (context) => const AppAboutDialog(),
+                  ),
+                  color: Colors.grey[400],
+                  tooltip: 'About',
+                ),
                 IconButton(
                   icon: const Icon(Icons.settings_outlined, size: 20),
                   onPressed: () => showDialog(
@@ -192,6 +203,7 @@ class SidebarWidget extends StatelessWidget {
                     builder: (context) => const SettingsDialog(),
                   ),
                   color: Colors.grey[400],
+                  tooltip: 'Settings',
                 ),
               ],
             ),
