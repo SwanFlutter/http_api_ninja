@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+
+## [1.1.1] - 2025-12-03
+
+
+
+- **Add Collection BaseUrl**
+   - Cause: Add base URL to each collection
+   - Solution: Add base URL to each collection
+
+
+   - Example: https://example.com/api/
+- **Add Collection BaseUrl**
+   - Cause: Add base URL to each collection
+   - Solution: Add base URL to each collection
+   - Example: https://example.com/api/
+
 ## [1.1.0] - 2025-11-26
 
 ### ✨ New Features
