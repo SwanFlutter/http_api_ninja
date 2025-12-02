@@ -13,10 +13,18 @@ All notable changes to this project will be documented in this file.
 
 
    - Example: https://example.com/api/
-- **Add Collection BaseUrl**
    - Cause: Add base URL to each collection
    - Solution: Add base URL to each collection
    - Example: https://example.com/api/
+
+- **Fix FontSize Change**
+  - Cause: FontSize changed to 14px
+  - Solution: FontSize changed to 14px
+
+
+
+
+
 
 ## [1.1.0] - 2025-11-26
 
