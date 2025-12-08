@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 
 
-## [1.1.2] - 2025-12-03
+## [1.1.2] - 2025-12-07
 
   * *Fix bug Collection BaseUrl**
    - Cause: Add base URL to each collection
