@@ -193,6 +193,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [x] Request History ✅ (v1.1.0)
 - [x] Rename Collections ✅ (v1.1.0)
 - [x] Code Snippet Syntax Highlighting ✅ (v1.1.0)
+- [x] Add Collection BaseUrl  ✅ (v1.1.1)
+- [x] Fix bug  ✅ (v1.1.2)
 - [ ] Import/Export Collections
 - [ ] WebSocket Support
 - [ ] GraphQL Support

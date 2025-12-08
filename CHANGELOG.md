@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 
 
+## [1.1.2] - 2025-12-03
+
+  * *Fix bug Collection BaseUrl**
+   - Cause: Add base URL to each collection
+   - Solution: Add base URL to each collection
+
+- **Fix FontSize **
+  - Cause: FontSize changed to 14px
+  - Solution: FontSize changed to 14px
+
 ## [1.1.1] - 2025-12-03
 
 
