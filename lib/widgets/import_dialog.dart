@@ -28,6 +28,7 @@ class _ImportDialogState extends State<ImportDialog> {
     'url',
     'JSON',
   ];
+
   bool _isImporting = false;
 
   // Track actual text separately to avoid rebuilding TextField on every keystroke
