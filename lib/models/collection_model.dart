@@ -5,7 +5,7 @@ class CollectionModel {
   final String name;
   final String? baseUrl;
   final List<HttpRequestModel> requests;
-  final List<CollectionModel> subCollections;
+  final List<CollectionModel> folders;
   final bool isExpanded;
 
   CollectionModel({
@@ -13,7 +13,7 @@ class CollectionModel {
     required this.name,
     this.baseUrl,
     this.requests = const [],
-    this.subCollections = const [],
+    this.folders = const [],
     this.isExpanded = true,
   });
 
@@ -22,7 +22,7 @@ class CollectionModel {
     'name': name,
     'baseUrl': baseUrl,
     'requests': requests.map((r) => r.toJson()).toList(),
-    'subCollections': subCollections.map((c) => c.toJson()).toList(),
+    'folders': folders.map((f) => f.toJson()).toList(),
     'isExpanded': isExpanded,
   };
 
@@ -36,9 +36,9 @@ class CollectionModel {
                 ?.map((r) => HttpRequestModel.fromJson(r))
                 .toList() ??
             [],
-        subCollections:
-            (json['subCollections'] as List?)
-                ?.map((c) => CollectionModel.fromJson(c))
+        folders:
+            (json['folders'] as List?)
+                ?.map((f) => CollectionModel.fromJson(f))
                 .toList() ??
             [],
         isExpanded: json['isExpanded'] ?? true,
@@ -49,14 +49,14 @@ class CollectionModel {
     String? name,
     String? baseUrl,
     List<HttpRequestModel>? requests,
-    List<CollectionModel>? subCollections,
+    List<CollectionModel>? folders,
     bool? isExpanded,
   }) => CollectionModel(
     id: id ?? this.id,
     name: name ?? this.name,
     baseUrl: baseUrl ?? this.baseUrl,
     requests: requests ?? this.requests,
-    subCollections: subCollections ?? this.subCollections,
+    folders: folders ?? this.folders,
     isExpanded: isExpanded ?? this.isExpanded,
   );
 }

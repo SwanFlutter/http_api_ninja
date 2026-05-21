@@ -3,13 +3,33 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get_x_master/get_x_master.dart';
 import 'package:path_provider_master/path_provider_master.dart';
+import 'package:platform_version/platform_version.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'http_controller.dart';
 
 class UpdateController extends GetXController {
   // Current app version - UPDATE THIS WITH EACH RELEASE
-  static const String currentVersion = '1.0.0';
+  final _plugin = PlatformVersion();
+  static  String currentVersion = '';
+
+
+  Future<void> initPlatformState()async {
+
+    final appVersion = await _plugin.getAppVersion();
+
+    try{
+      currentVersion = appVersion!;
+
+      print("currentVersion: $currentVersion");
+      update();
+    }catch (e) {
+      debugPrint('Error: $e');
+    }
+
+
+  }
+
 
   // GitHub repository info - UPDATE WITH YOUR REPO
   static const String githubOwner = 'SwanFlutter';

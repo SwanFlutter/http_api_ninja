@@ -23,6 +23,7 @@ dependencies:
   flutter_code_view: ^0.0.5
   url_launcher: ^6.3.2
   path_provider_master: ^1.0.0
+  platform_version: ^0.0.4
 
 dev_dependencies:
   flutter_test:

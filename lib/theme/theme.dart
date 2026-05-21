@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../config/constant.dart';
 
-// Thunder Client inspired colors
+
 const primaryColor = Color(0xFF40B01F);
 const primaryColorLight = Color(0xFF5FC936);
 const primaryColorDark = Color(0xFF2D7D17);

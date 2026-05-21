@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter/services.dart';
 import 'package:get_x_master/get_x_master.dart';
 import 'package:get_x_storage/get_x_storage.dart';
 
@@ -710,36 +710,26 @@ class HttpController extends GetXController {
   }
 
   void toggleCollection(String collectionId) {
-    // Try root level first
-    final index = collections.indexWhere((c) => c.id == collectionId);
-    if (index != -1) {
-      collections[index] = collections[index].copyWith(
-        isExpanded: !collections[index].isExpanded,
-      );
-      _saveCollections();
-      return;
-    }
-    // Search nested sub-collections recursively
     bool toggled = false;
-    final updated = collections.map((c) {
-      final result = _toggleNested(c, collectionId);
-      if (result != c) toggled = true;
-      return result;
-    }).toList();
+
+    List<CollectionModel> updateRecursive(List<CollectionModel> list) {
+      return list.map((c) {
+        if (c.id == collectionId) {
+          toggled = true;
+          return c.copyWith(isExpanded: !c.isExpanded);
+        }
+        if (c.folders.isNotEmpty) {
+          return c.copyWith(folders: updateRecursive(c.folders));
+        }
+        return c;
+      }).toList();
+    }
+
+    final newList = updateRecursive(collections);
     if (toggled) {
-      collections.value = updated;
+      collections.value = newList;
       _saveCollections();
     }
-  }
-
-  CollectionModel _toggleNested(CollectionModel col, String targetId) {
-    final updatedSubs = col.subCollections.map((sub) {
-      if (sub.id == targetId) {
-        return sub.copyWith(isExpanded: !sub.isExpanded);
-      }
-      return _toggleNested(sub, targetId);
-    }).toList();
-    return col.copyWith(subCollections: updatedSubs);
   }
 
   void addCollection(String name, {String? baseUrl}) {
@@ -761,9 +751,7 @@ class HttpController extends GetXController {
 
   void exportCollection(CollectionModel collection) {
     try {
-      final json = const JsonEncoder.withIndent(
-        '  ',
-      ).convert(collection.toJson());
+      final json = const JsonEncoder.withIndent('  ').convert(collection.toJson());
       Clipboard.setData(ClipboardData(text: json));
       showNotification('Collection JSON copied to clipboard', 'success');
     } catch (e) {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get_x_master/get_x_master.dart';
+import 'package:http_api_ninja/models/collection_model.dart';
 
 import '../I18n/messages.dart';
 import '../controller/http_controller.dart';
@@ -381,12 +382,11 @@ class SidebarWidget extends StatelessWidget {
 
   Widget _buildCollectionFolder(
     BuildContext context,
-    collection,
+    CollectionModel collection,
     HttpController controller, {
-    int depth = 0,
+    double depth = 0,
   }) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final leftPad = 8.0 + depth * 16.0;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -395,7 +395,7 @@ class SidebarWidget extends StatelessWidget {
           onTap: () => controller.toggleCollection(collection.id),
           child: Padding(
             padding: EdgeInsets.only(
-              left: leftPad,
+              left: 8 + (depth * 12),
               right: 8,
               top: 6,
               bottom: 6,
@@ -411,9 +411,11 @@ class SidebarWidget extends StatelessWidget {
                 ),
                 const SizedBox(width: 4),
                 Icon(
-                  depth > 0 ? Icons.folder_open : Icons.folder,
+                  collection.folders.isNotEmpty
+                      ? Icons.folder
+                      : Icons.folder_open,
                   size: 16,
-                  color: depth > 0 ? Colors.orange[300] : Colors.grey[400],
+                  color: Colors.grey[400],
                 ),
                 const SizedBox(width: 8),
                 Expanded(
@@ -423,10 +425,13 @@ class SidebarWidget extends StatelessWidget {
                       Text(
                         collection.name,
                         style: context.textTheme.bodySmall?.copyWith(
-                          fontWeight: FontWeight.w500,
+                          fontWeight: depth == 0
+                              ? FontWeight.w600
+                              : FontWeight.w500,
                         ),
                       ),
-                      if (collection.baseUrl != null &&
+                      if (depth == 0 &&
+                          collection.baseUrl != null &&
                           collection.baseUrl!.isNotEmpty)
                         Text(
                           collection.baseUrl!,
@@ -439,177 +444,196 @@ class SidebarWidget extends StatelessWidget {
                     ],
                   ),
                 ),
-                PopupMenuButton(
-                  icon: Icon(
-                    Icons.more_vert,
-                    size: 16,
-                    color: Colors.grey[400],
+                if (depth ==
+                    0) // Only show menu for top-level collections for now
+                  PopupMenuButton(
+                    icon: Icon(
+                      Icons.more_vert,
+                      size: 16,
+                      color: Colors.grey[400],
+                    ),
+                    itemBuilder: (context) => [
+                      const PopupMenuItem(
+                        value: 'rename',
+                        child: Row(
+                          children: [
+                            Icon(Icons.edit, size: 16, color: Colors.blue),
+                            SizedBox(width: 8),
+                            Text('Rename'),
+                          ],
+                        ),
+                      ),
+                      const PopupMenuItem(
+                        value: 'editBaseUrl',
+                        child: Row(
+                          children: [
+                            Icon(Icons.link, size: 16, color: Colors.orange),
+                            SizedBox(width: 8),
+                            Text('Edit Base URL'),
+                          ],
+                        ),
+                      ),
+                      PopupMenuItem(
+                        value: 'export',
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.ios_share,
+                              size: 16,
+                              color: Colors.blue[400],
+                            ),
+                            const SizedBox(width: 8),
+                            Text(Messages.export.tr),
+                          ],
+                        ),
+                      ),
+                      const PopupMenuItem(
+                        value: 'delete',
+                        child: Row(
+                          children: [
+                            Icon(Icons.delete, size: 16, color: Colors.red),
+                            SizedBox(width: 8),
+                            Text('Delete'),
+                          ],
+                        ),
+                      ),
+                    ],
+                    onSelected: (value) {
+                      if (value == 'rename') {
+                        _showRenameCollectionDialog(
+                          context,
+                          controller,
+                          collection.id,
+                          collection.name,
+                        );
+                      } else if (value == 'editBaseUrl') {
+                        _showEditBaseUrlDialog(
+                          context,
+                          controller,
+                          collection.id,
+                          collection.baseUrl,
+                        );
+                      } else if (value == 'export') {
+                        controller.exportCollection(collection);
+                      } else if (value == 'delete') {
+                        _showDeleteCollectionDialog(
+                          context,
+                          controller,
+                          collection.id,
+                        );
+                      }
+                    },
                   ),
-                  itemBuilder: (context) => [
-                    const PopupMenuItem(
-                      value: 'rename',
-                      child: Row(
-                        children: [
-                          Icon(Icons.edit, size: 16, color: Colors.blue),
-                          SizedBox(width: 8),
-                          Text('Rename'),
-                        ],
-                      ),
-                    ),
-                    const PopupMenuItem(
-                      value: 'editBaseUrl',
-                      child: Row(
-                        children: [
-                          Icon(Icons.link, size: 16, color: Colors.orange),
-                          SizedBox(width: 8),
-                          Text('Edit Base URL'),
-                        ],
-                      ),
-                    ),
-                    PopupMenuItem(
-                      value: 'export',
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.ios_share,
-                            size: 16,
-                            color: Colors.blue[400],
-                          ),
-                          const SizedBox(width: 8),
-                          Text(Messages.export.tr),
-                        ],
-                      ),
-                    ),
-                    const PopupMenuItem(
-                      value: 'delete',
-                      child: Row(
-                        children: [
-                          Icon(Icons.delete, size: 16, color: Colors.red),
-                          SizedBox(width: 8),
-                          Text('Delete'),
-                        ],
-                      ),
-                    ),
-                  ],
-                  onSelected: (value) {
-                    if (value == 'rename') {
-                      _showRenameCollectionDialog(
-                        context,
-                        controller,
-                        collection.id,
-                        collection.name,
-                      );
-                    } else if (value == 'editBaseUrl') {
-                      _showEditBaseUrlDialog(
-                        context,
-                        controller,
-                        collection.id,
-                        collection.baseUrl,
-                      );
-                    } else if (value == 'export') {
-                      controller.exportCollection(collection);
-                    } else if (value == 'delete') {
-                      _showDeleteCollectionDialog(
-                        context,
-                        controller,
-                        collection.id,
-                      );
-                    }
-                  },
-                ),
               ],
             ),
           ),
         ),
-        if (collection.isExpanded) ...[
-          // Sub-collections (folders inside this collection)
-          ...collection.subCollections.map<Widget>(
-            (sub) => _buildCollectionFolder(
-              context,
-              sub,
-              controller,
-              depth: depth + 1,
-            ),
-          ),
-          // Requests
-          ...collection.requests.map<Widget>((req) {
-            final isSelected = controller.selectedRequest.value?.id == req.id;
-            return Padding(
-              padding: EdgeInsets.only(left: leftPad + 24),
-              child: InkWell(
-                onTap: () => controller.selectRequest(req),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 6,
-                  ),
-                  decoration: BoxDecoration(
-                    color: isSelected
-                        ? (isDark ? const Color(0xFF37373D) : Colors.grey[200])
-                        : Colors.transparent,
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 6,
-                          vertical: 2,
-                        ),
-                        decoration: BoxDecoration(
-                          color: _getMethodColor(
-                            req.method,
-                          ).withValues(alpha: 0.2),
-                          borderRadius: BorderRadius.circular(3),
-                        ),
-                        child: Text(
-                          req.method,
-                          style: TextStyle(
-                            fontSize: 11,
-                            color: _getMethodColor(req.method),
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          req.name,
-                          style: const TextStyle(fontSize: 13),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      PopupMenuButton(
-                        icon: Icon(
-                          Icons.more_horiz,
-                          size: 14,
-                          color: Colors.grey[400],
-                        ),
-                        itemBuilder: (context) => [
-                          const PopupMenuItem(
-                            value: 'delete',
-                            child: Row(
-                              children: [
-                                Icon(Icons.delete, size: 14, color: Colors.red),
-                                SizedBox(width: 8),
-                                Text('Delete', style: TextStyle(fontSize: 12)),
-                              ],
-                            ),
-                          ),
-                        ],
-                        onSelected: (value) {
-                          if (value == 'delete') {
-                            controller.deleteRequest(collection.id, req.id);
-                          }
-                        },
-                      ),
-                    ],
+        if (collection.isExpanded)
+          Padding(
+            padding: EdgeInsets.only(left: 12 + (depth * 4)),
+            child: Column(
+              children: [
+                // Render Sub-folders
+                ...collection.folders.map(
+                  (folder) => _buildCollectionFolder(
+                    context,
+                    folder,
+                    controller,
+                    depth: depth + 1,
                   ),
                 ),
-              ),
-            );
-          }),
-        ],
+                // Render Requests
+                ...collection.requests.map<Widget>((req) {
+                  final isSelected =
+                      controller.selectedRequest.value?.id == req.id;
+                  return InkWell(
+                    onTap: () => controller.selectRequest(req),
+                    child: Container(
+                      padding: EdgeInsets.only(
+                        left: 20 + (depth * 12),
+                        right: 8,
+                        top: 6,
+                        bottom: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: isSelected
+                            ? (isDark
+                                  ? const Color(0xFF37373D)
+                                  : Colors.grey[200])
+                            : Colors.transparent,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 6,
+                              vertical: 2,
+                            ),
+                            decoration: BoxDecoration(
+                              color: _getMethodColor(
+                                req.method,
+                              ).withValues(alpha: 0.2),
+                              borderRadius: BorderRadius.circular(3),
+                            ),
+                            child: Text(
+                              req.method,
+                              style: TextStyle(
+                                fontSize: 10,
+                                color: _getMethodColor(req.method),
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              req.name,
+                              style: const TextStyle(fontSize: 12),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          PopupMenuButton(
+                            icon: Icon(
+                              Icons.more_horiz,
+                              size: 14,
+                              color: Colors.grey[400],
+                            ),
+                            itemBuilder: (context) => [
+                              const PopupMenuItem(
+                                value: 'delete',
+                                child: Row(
+                                  children: [
+                                    Icon(
+                                      Icons.delete,
+                                      size: 14,
+                                      color: Colors.red,
+                                    ),
+                                    SizedBox(width: 8),
+                                    Text(
+                                      'Delete',
+                                      style: TextStyle(fontSize: 12),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                            onSelected: (value) {
+                              if (value == 'delete') {
+                                // For now, we only support deleting from top-level collections
+                                // because the controller needs the collectionId
+                                controller.deleteRequest(collection.id, req.id);
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }),
+              ],
+            ),
+          ),
       ],
     );
   }

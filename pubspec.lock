@@ -272,6 +272,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.2"
+  platform_version:
+    dependency: "direct main"
+    description:
+      name: platform_version
+      sha256: "46cc6085490ced7f943f82e6e0cc03f21e992ea2a0e224c26db53dcfefc78411"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.4"
   plugin_platform_interface:
     dependency: transitive
     description:

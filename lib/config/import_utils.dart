@@ -30,28 +30,109 @@ class ImportUtils {
 
   // ======================= SMART JSON PARSER =======================
   static dynamic _parseJsonSmart(String input) {
-    // First attempt: parse as-is
+    // Attempt 1: parse as-is
     try {
       return _doParseJson(input);
     } catch (_) {}
 
-    // Second attempt: light cleanup only (no heavy regex on large strings)
+    // Attempt 2: light cleanup (BOM, trailing commas)
     try {
-      final lightFixed = _lightFixJson(input);
-      return _doParseJson(lightFixed);
+      return _doParseJson(_lightFixJson(input));
     } catch (_) {}
 
-    // Third attempt: full repair (only for smaller inputs to avoid OOM)
+    // Attempt 3: strip the "response" arrays — they often contain unescaped
+    // quotes in body/description fields and are not needed for importing
+    // requests.  This is safe because we never use response data.
+    if (input.length <= 5000000) {
+      try {
+        final stripped = _stripResponseArrays(input);
+        return _doParseJson(stripped);
+      } catch (_) {}
+
+      // Attempt 4: strip responses + light fix
+      try {
+        final stripped = _lightFixJson(_stripResponseArrays(input));
+        return _doParseJson(stripped);
+      } catch (_) {}
+    }
+
+    // Attempt 5: full character-level repair (only for smaller inputs)
     if (input.length <= 500000) {
       try {
-        final repaired = _repairJson(input);
-        return _doParseJson(repaired);
+        return _doParseJson(_repairJson(input));
       } catch (e) {
         debugPrint("Repair failed: $e");
       }
     }
 
     return _emptyCollection("Invalid JSON");
+  }
+
+  /// Removes `"response": [...]` arrays from a Postman JSON string using a
+  /// simple bracket-depth scanner.  This avoids regex catastrophic
+  /// backtracking on large files and sidesteps unescaped-quote issues that
+  /// only appear inside response bodies.
+  static String _stripResponseArrays(String src) {
+    // We look for the literal token  "response":  followed by  [
+    // then skip everything until the matching ] (respecting nesting).
+    final buf = StringBuffer();
+    int i = 0;
+    while (i < src.length) {
+      // Try to match  "response"\s*:\s*[
+      if (src[i] == '"' && src.startsWith('"response"', i)) {
+        final keyEnd = i + 10; // length of '"response"' = 10
+        // skip whitespace + colon + whitespace
+        int j = keyEnd;
+        while (j < src.length &&
+            (src[j] == ' ' ||
+                src[j] == '\t' ||
+                src[j] == '\n' ||
+                src[j] == '\r')) {
+          j++;
+        }
+        if (j < src.length && src[j] == ':') {
+          j++;
+          while (j < src.length &&
+              (src[j] == ' ' ||
+                  src[j] == '\t' ||
+                  src[j] == '\n' ||
+                  src[j] == '\r')) {
+            j++;
+          }
+          if (j < src.length && src[j] == '[') {
+            // Found "response": [ — skip to matching ]
+            int depth = 1;
+            j++;
+            bool inStr = false;
+            while (j < src.length && depth > 0) {
+              final c = src[j];
+              if (inStr) {
+                if (c == '\\') {
+                  j += 2;
+                  continue;
+                }
+                if (c == '"') inStr = false;
+              } else {
+                if (c == '"')
+                  inStr = true;
+                else if (c == '[')
+                  depth++;
+                else if (c == ']')
+                  depth--;
+              }
+              j++;
+            }
+            // Replace with empty array to keep JSON valid
+            buf.write('"response": []');
+            i = j;
+            continue;
+          }
+        }
+      }
+      buf.write(src[i]);
+      i++;
+    }
+    return buf.toString();
   }
 
   /// Quick, allocation-light fixes that are safe on large strings.
@@ -100,101 +181,206 @@ class ImportUtils {
   // Only called for inputs <= 500 KB to prevent catastrophic backtracking
   // on huge strings with complex regex patterns.
   static String _repairJson(String input) {
-    String out = input.trim();
+    if (input.length > 2000000) return input;
 
-    // 1. Fix Postman {{var}} → "var"
-    //    Use a non-greedy match but limit to avoid backtracking on huge input.
-    out = out.replaceAllMapped(
-      RegExp(r'\{\{([^}]{1,200})\}\}'),
-      (m) => '"${m.group(1)}"',
+    // Step 1: remove illegal control characters (keep \t \n \r)
+    String out = input.trim().replaceAll(
+      RegExp(r'[\x00-\x08\x0B\x0C\x0E-\x1F]'),
+      '',
     );
 
-    // 2. Fix duplicated quotes ""value""
-    out = out.replaceAllMapped(
-      RegExp(r'""([^"]{0,500})""'),
-      (m) => '"${m.group(1)}"',
-    );
+    // Step 2: fix unescaped double-quotes inside JSON string values.
+    //
+    // The problem pattern (from Postman/Laravel API doc exports):
+    //   "body": "{"success":false,"message":"..."}"
+    // The inner quotes are not escaped, making the JSON invalid.
+    //
+    // We walk the string character-by-character so we can distinguish
+    // "we are inside a JSON string value" from "we are at a structural
+    // character".  When inside a string value we escape any bare " that
+    // is not already preceded by \.
+    out = _fixUnescapedQuotesInValues(out);
 
-    // 3. Remove illegal control characters (keep \t \n \r)
-    out = out.replaceAll(RegExp(r'[\x00-\x08\x0B\x0C\x0E-\x1F]'), '');
-
-    // 4. Fix unquoted keys — only safe on smaller strings
-    if (out.length <= 200000) {
-      out = out.replaceAllMapped(
-        RegExp(r'([{,]\s*)([a-zA-Z_][a-zA-Z0-9_]*)(\s*:)'),
-        (m) => '${m.group(1)}"${m.group(2)}"${m.group(3)}',
-      );
-    }
-
-    // 5. Remove trailing commas
+    // Step 3: remove trailing commas
     out = out.replaceAll(RegExp(r',\s*}'), '}');
     out = out.replaceAll(RegExp(r',\s*]'), ']');
 
     return out;
   }
 
-  // ======================= NORMALIZER =======================
+  /// Walks [src] character-by-character and escapes any double-quote that
+  /// appears inside a JSON string value but is not already backslash-escaped.
+  ///
+  /// Algorithm:
+  ///   We track whether we are inside a string or outside.
+  ///   Outside: structural chars ( { } [ ] : , ) and opening quotes.
+  ///   Inside a KEY string: copy verbatim until unescaped closing quote.
+  ///   Inside a VALUE string: when we see an unescaped quote, we must decide
+  ///     if it is the *real* closing quote or a bare quote inside the value.
+  ///
+  ///   Decision rule for a quote inside a value:
+  ///     Scan forward from the candidate closing quote.  Try to parse the
+  ///     remainder as valid JSON structure (key or structural char).
+  ///     If the very next non-whitespace char is  ,  }  ]  we treat it as
+  ///     the real closing quote.
+  ///     Otherwise we escape it and keep reading.
+  static String _fixUnescapedQuotesInValues(String src) {
+    final buf = StringBuffer();
+    const int stOutside = 0;
+    const int stInKey = 1;
+    const int stAfterKey = 2;
+    const int stInValue = 3;
 
-  /// Converts a Postman collection into a single root [CollectionModel].
-  /// Top-level folders become [subCollections]; loose root requests stay on
-  /// the root collection itself.
-  static CollectionModel _normalizePostman(Map<String, dynamic> data) {
+    int state = stOutside;
+    bool expectValue = false;
+
+    int i = 0;
+    while (i < src.length) {
+      final ch = src[i];
+
+      switch (state) {
+        case stOutside:
+          if (ch == '"') {
+            buf.write(ch);
+            if (expectValue) {
+              state = stInValue;
+              expectValue = false;
+            } else {
+              state = stInKey;
+            }
+          } else {
+            buf.write(ch);
+            if (ch == ':') {
+              expectValue = true;
+            } else if (ch == ',' ||
+                ch == '{' ||
+                ch == '[' ||
+                ch == '}' ||
+                ch == ']') {
+              expectValue = false;
+            }
+          }
+
+        case stInKey:
+          if (ch == '\\' && i + 1 < src.length) {
+            buf.write(ch);
+            buf.write(src[i + 1]);
+            i += 2;
+            continue;
+          }
+          if (ch == '"') {
+            buf.write(ch);
+            state = stAfterKey;
+          } else {
+            buf.write(ch);
+          }
+
+        case stAfterKey:
+          buf.write(ch);
+          if (ch == ':') {
+            expectValue = true;
+            state = stOutside;
+          } else if (ch != ' ' && ch != '\t' && ch != '\n' && ch != '\r') {
+            state = stOutside;
+          }
+
+        case stInValue:
+          if (ch == '\\' && i + 1 < src.length) {
+            buf.write(ch);
+            buf.write(src[i + 1]);
+            i += 2;
+            continue;
+          }
+          if (ch == '"') {
+            // Only treat as closing quote if the very next non-whitespace
+            // char is a JSON structural separator: ,  }  ]
+            // A following " (next key) is NOT sufficient — it could be a
+            // quoted word inside the value like "working_days".
+            if (_isStructuralNext(src, i + 1)) {
+              buf.write(ch); // real closing quote
+              state = stOutside;
+              expectValue = false;
+            } else {
+              buf.write('\\"'); // bare quote inside value → escape
+            }
+          } else {
+            buf.write(ch);
+          }
+      }
+      i++;
+    }
+    return buf.toString();
+  }
+
+  /// Returns true only when the next non-whitespace character after position
+  /// [pos] is a JSON value-terminating character: ,  }  ]  or end-of-input.
+  ///
+  /// A following `"` is intentionally NOT considered terminating because it
+  /// could be a quoted word inside a description string.
+  static bool _isStructuralNext(String src, int pos) {
+    int j = pos;
+    while (j < src.length) {
+      final c = src[j];
+      if (c == ' ' || c == '\t' || c == '\n' || c == '\r') {
+        j++;
+        continue;
+      }
+      return c == ',' || c == '}' || c == ']';
+    }
+    return true; // end of input
+  }
+
+  // ======================= NORMALIZER =======================
+  static dynamic _normalizePostman(Map<String, dynamic> data) {
     final info = data["info"] ?? {};
-    final String rootName = info["name"]?.toString() ?? "Imported Collection";
+    final rootName = info["name"] ?? "Imported Collection";
     final items = data["item"];
 
     debugPrint("Normalizing Postman collection: $rootName");
 
-    int requestCounter = 0;
-    final List<HttpRequestModel> rootRequests = [];
-    final List<CollectionModel> subCollections = [];
+    if (items is! List) {
+      return _emptyCollection(rootName);
+    }
 
-    CollectionModel buildFolder(Map<String, dynamic> folderItem) {
-      final folderName = folderItem["name"]?.toString() ?? "Folder";
-      final List<HttpRequestModel> folderRequests = [];
-      final List<CollectionModel> nestedSubs = [];
+    // Recursively parse Postman items into requests and folders
+    CollectionModel parseLevel(String name, List itemsList, [String idPrefix = ""]) {
+      final List<HttpRequestModel> requests = [];
+      final List<CollectionModel> subFolders = [];
 
-      final subItems = folderItem["item"];
-      if (subItems is List) {
-        for (var sub in subItems) {
-          if (sub is! Map<String, dynamic>) continue;
-          if (sub.containsKey("item")) {
-            nestedSubs.add(buildFolder(sub));
-          } else if (sub.containsKey("request")) {
-            folderRequests.add(_convertPostmanRequest(sub, requestCounter++));
+      for (var i = 0; i < itemsList.length; i++) {
+        final item = itemsList[i];
+        if (item is Map<String, dynamic>) {
+          final itemName = item["name"]?.toString() ?? "Unnamed";
+          final String currentId = idPrefix.isEmpty ? "$i" : "${idPrefix}_$i";
+
+          if (item.containsKey("request")) {
+            // It's a request
+            requests.add(_convertPostmanRequest(item, requests.length));
+          } else if (item.containsKey("item")) {
+            // It's a folder
+            subFolders.add(parseLevel(
+              itemName,
+              item["item"] as List,
+              "${currentId}_f",
+            ));
           }
         }
       }
 
       return CollectionModel(
-        id: "${DateTime.now().millisecondsSinceEpoch}_${folderName.hashCode}",
-        name: folderName,
-        requests: folderRequests,
-        subCollections: nestedSubs,
+        id: "${DateTime.now().millisecondsSinceEpoch}_$idPrefix",
+        name: name,
+        requests: requests,
+        folders: subFolders,
+        isExpanded: false, // Start collapsed for nested folders
       );
     }
 
-    if (items is List) {
-      for (var item in items) {
-        if (item is! Map<String, dynamic>) continue;
-        if (item.containsKey("item")) {
-          subCollections.add(buildFolder(item));
-        } else if (item.containsKey("request")) {
-          rootRequests.add(_convertPostmanRequest(item, requestCounter++));
-        }
-      }
-    }
-
-    debugPrint(
-      "Root requests: ${rootRequests.length}, sub-collections: ${subCollections.length}",
-    );
-
-    return CollectionModel(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
-      name: rootName,
-      requests: rootRequests,
-      subCollections: subCollections,
-    );
+    final rootCollection = parseLevel(rootName, items);
+    
+    // Some users prefer many top-level collections if the Postman file is a set of collections
+    // But here we return a single root collection containing everything as requested.
+    return rootCollection;
   }
 
   static HttpRequestModel _convertPostmanRequest(

@@ -5,6 +5,7 @@ import 'package:get_x_storage/get_x_storage.dart';
 import 'I18n/translations.dart';
 import 'bindings/http_ninja_bindings.dart';
 import 'controller/theme_controller.dart';
+import 'controller/update_controller.dart';
 import 'theme/theme.dart';
 import 'views/home_view.dart';
 
@@ -28,6 +29,10 @@ class HttpApiNinjaApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'HTTP API Ninja',
+      onInit: () {
+        final UpdateController controller = Get.smartFind<UpdateController>();
+        controller.initPlatformState();
+      },
       debugShowCheckedModeBanner: false,
       translations: AppTranslations(),
       locale: const Locale('en', 'US'),
