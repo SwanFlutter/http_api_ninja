@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 
 
+
+## [1.1.3] - 2026-05-21
+
+- ✅ Add Import feature (curl, gRpcurl, Raw, text, url, JSON)
+- ✅ Support for Postman Collection (v2.1) import
+- ✅ Import Dialog with collection selection & Import as New Collection
+- ✅ curl parser for method, headers, body and url
+- ✅ Export Collection to JSON (Copy to Clipboard)
+
 ## [1.1.2] - 2025-12-07
 
   * *Fix bug Collection BaseUrl**
