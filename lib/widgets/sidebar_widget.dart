@@ -415,7 +415,7 @@ class SidebarWidget extends StatelessWidget {
                       ? Icons.folder
                       : Icons.folder_open,
                   size: 16,
-                  color: Colors.grey[400],
+                  color: Colors.amber,
                 ),
                 const SizedBox(width: 8),
                 Expanded(

@@ -1,12 +1,15 @@
+// ignore_for_file: unused_field, unnecessary_to_list_in_spreads
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get_x_master/get_x_master.dart';
+
 import '../I18n/messages.dart';
-import '../controller/http_controller.dart';
 import '../config/import_utils.dart';
-import '../models/http_request_model.dart';
+import '../controller/http_controller.dart';
 import '../models/collection_model.dart';
+import '../models/http_request_model.dart';
 
 class ImportDialog extends StatefulWidget {
   const ImportDialog({super.key});
@@ -25,7 +28,7 @@ class _ImportDialogState extends State<ImportDialog> {
     'Raw',
     'text',
     'url',
-    'JSON'
+    'JSON',
   ];
   bool _isImporting = false;
 
@@ -104,14 +107,17 @@ class _ImportDialogState extends State<ImportDialog> {
                     children: [
                       Text(
                         'Select Import Type:',
-                        style: context.textTheme.labelMedium
-                            ?.copyWith(fontWeight: FontWeight.w600),
+                        style: context.textTheme.labelMedium?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                       TextButton.icon(
                         onPressed: _pasteFromClipboard,
                         icon: const Icon(Icons.content_paste, size: 16),
-                        label: const Text('Paste from Clipboard',
-                            style: TextStyle(fontSize: 12)),
+                        label: const Text(
+                          'Paste from Clipboard',
+                          style: TextStyle(fontSize: 12),
+                        ),
                       ),
                     ],
                   ),
@@ -152,15 +158,19 @@ class _ImportDialogState extends State<ImportDialog> {
                           top: 10,
                           child: Container(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 8, vertical: 4),
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
                             decoration: BoxDecoration(
-                              color: Colors.orange.withOpacity(0.8),
+                              color: Colors.orange.withValues(alpha: 0.8),
                               borderRadius: BorderRadius.circular(4),
                             ),
                             child: Text(
                               '${(_inputController.text.length / 1024).toStringAsFixed(0)} KB',
                               style: const TextStyle(
-                                  fontSize: 10, color: Colors.white),
+                                fontSize: 10,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                         ),
@@ -176,7 +186,9 @@ class _ImportDialogState extends State<ImportDialog> {
                         hintText: Messages.importAsNewCollection.tr,
                         border: const OutlineInputBorder(),
                         contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 8),
+                          horizontal: 12,
+                          vertical: 8,
+                        ),
                       ),
                       items: [
                         DropdownMenuItem<String>(
@@ -184,8 +196,12 @@ class _ImportDialogState extends State<ImportDialog> {
                           child: Text(Messages.importAsNewCollection.tr),
                         ),
                         ...controller.collections
-                            .map((c) => DropdownMenuItem(
-                                value: c.id, child: Text(c.name)))
+                            .map(
+                              (c) => DropdownMenuItem(
+                                value: c.id,
+                                child: Text(c.name),
+                              ),
+                            )
                             .toList(),
                       ],
                       onChanged: (value) =>
@@ -205,8 +221,10 @@ class _ImportDialogState extends State<ImportDialog> {
               ElevatedButton(
                 onPressed: _handleImport,
                 style: ElevatedButton.styleFrom(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 12,
+                  ),
                 ),
                 child: Text(Messages.import.tr),
               ),
@@ -226,9 +244,7 @@ class _ImportDialogState extends State<ImportDialog> {
         hintText: 'Paste your $_selectedType here...',
         filled: true,
         fillColor: isDark ? const Color(0xFF2D2D2D) : Colors.grey[100],
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(4),
-        ),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(4)),
         contentPadding: const EdgeInsets.all(12),
         helperText:
             'Tip: For large data use "Paste from Clipboard" button above.',
@@ -262,6 +278,7 @@ class _ImportDialogState extends State<ImportDialog> {
               padding: const EdgeInsets.all(12),
               child: Text(
                 _inputController.text.length > 500
+                    // ignore: unnecessary_brace_in_string_interps
                     ? '${_inputController.text.substring(0, 500)}\n\n... [${lines} lines / $sizeKb KB total — ready to import]'
                     : _inputController.text,
                 style: TextStyle(
@@ -274,18 +291,15 @@ class _ImportDialogState extends State<ImportDialog> {
           ),
           const Divider(height: 1),
           Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             child: Row(
               children: [
-                Icon(Icons.check_circle,
-                    size: 14, color: Colors.green[600]),
+                Icon(Icons.check_circle, size: 14, color: Colors.green[600]),
                 const SizedBox(width: 6),
                 Expanded(
                   child: Text(
                     '$lines lines · $sizeKb KB loaded',
-                    style: const TextStyle(
-                        fontSize: 11, color: Colors.green),
+                    style: const TextStyle(fontSize: 11, color: Colors.green),
                   ),
                 ),
                 TextButton.icon(
@@ -297,10 +311,8 @@ class _ImportDialogState extends State<ImportDialog> {
                     });
                   },
                   icon: const Icon(Icons.clear, size: 14),
-                  label: const Text('Clear',
-                      style: TextStyle(fontSize: 12)),
-                  style: TextButton.styleFrom(
-                      foregroundColor: Colors.red[400]),
+                  label: const Text('Clear', style: TextStyle(fontSize: 12)),
+                  style: TextButton.styleFrom(foregroundColor: Colors.red[400]),
                 ),
               ],
             ),
@@ -328,6 +340,16 @@ class _ImportDialogState extends State<ImportDialog> {
           _isLargeText = data.text!.length > 50000;
         });
       }
+    } catch (e) {
+      debugPrint("Clipboard error: $e");
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Could not access clipboard: $e"),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
     } finally {
       if (mounted) setState(() => _isImporting = false);
     }
@@ -351,10 +373,10 @@ class _ImportDialogState extends State<ImportDialog> {
 
     try {
       // Run parsing in a background isolate so UI stays responsive
-      final result = await compute(
-        _parseInBackground,
-        {'type': type, 'input': input},
-      );
+      final result = await compute(_parseInBackground, {
+        'type': type,
+        'input': input,
+      });
 
       if (!mounted) return;
 
@@ -372,15 +394,21 @@ class _ImportDialogState extends State<ImportDialog> {
           controller.selectRequest(result);
           Get.back();
           controller.showNotification(
-              'Request imported successfully', 'success');
+            'Request imported successfully',
+            'success',
+          );
         } else {
           controller.showNotification(
-              'Please select a collection for single request', 'info');
+            'Please select a collection for single request',
+            'info',
+          );
           setState(() => _isImporting = false);
         }
       } else {
         controller.showNotification(
-            'Failed to parse input. Check the format and try again.', 'error');
+          'Failed to parse input. Check the format and try again.',
+          'error',
+        );
         setState(() => _isImporting = false);
       }
     } catch (e) {
