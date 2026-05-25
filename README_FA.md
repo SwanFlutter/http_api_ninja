@@ -163,18 +163,33 @@ dependencies:
 
 ## 📞 تماس
 
-- GitHub: [@yourusername](https://github.com/yourusername)
-- Email: your.email@example.com
+- GitHub: [@SwanFlutter](https://github.com/SwanFlutter/http_api_ninja)
+- Email: swan.dev1993@gmail.com
 
 ## 🗺️ نقشه راه
 
-- [ ] متغیرهای محیطی
-- [ ] Import/Export Collection
+### تکمیل‌شده
+
+- [x] متغیرهای محیطی ✅ (v1.1.0)
+- [x] تاریخچه درخواست‌ها ✅ (v1.1.0)
+- [x] تغییر نام مجموعه‌ها ✅ (v1.1.0)
+- [x] هایلایت سینتکس Code Snippet ✅ (v1.1.0)
+- [x] Base URL کالکشن ✅ (v1.1.1)
+- [x] Import مجموعه (curl, Postman, JSON, URL, Raw) ✅ (v1.1.2–v1.1.3)
+- [x] Export مجموعه به JSON ✅ (v1.1.3)
+- [x] سیستم پیشرفته `{{variable}}` و متغیر در Body ✅ (v1.1.4)
+- [x] Base URL کالکشن برای زیرپوشه‌ها ✅ (v1.1.4)
+- [x] سایدبار و پنل Response قابل تغییر اندازه ✅ (v1.1.4)
+- [x] اعلان‌های Toast سفارشی ✅ (v1.1.4)
+
+### برنامه‌ریزی‌شده
+
 - [ ] WebSocket Support
-- [ ] GraphQL Support
+- [ ] GraphQL Support (کلاینت کامل)
 - [ ] Mock Server
 - [ ] Team Collaboration
 - [ ] Cloud Sync
+- [ ] Mobile Apps (Android & iOS)
 
 ---
 

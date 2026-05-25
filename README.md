@@ -167,7 +167,7 @@ To add a new language:
 Contributions are always welcome! Please:
 1. Fork the project
 2. Create a new branch
-3. Commit your changes
+3. Commit your changes (human author only — no AI `Co-authored-by` trailers; see [CONTRIBUTING.md](CONTRIBUTING.md))
 4. Push to your branch
 5. Create a Pull Request
 
@@ -189,15 +189,24 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🗺️ Roadmap
 
+### Completed
+
 - [x] Environment Variables ✅ (v1.1.0)
 - [x] Request History ✅ (v1.1.0)
 - [x] Rename Collections ✅ (v1.1.0)
 - [x] Code Snippet Syntax Highlighting ✅ (v1.1.0)
-- [x] Add Collection BaseUrl  ✅ (v1.1.1)
-- [x] Fix bug  ✅ (v1.1.2)
-- [ ] Import/Export Collections
+- [x] Collection Base URL ✅ (v1.1.1)
+- [x] Import Collections (curl, Postman, JSON, URL, Raw) ✅ (v1.1.2–v1.1.3)
+- [x] Export Collection to JSON ✅ (v1.1.3)
+- [x] Advanced `{{variable}}` system & body variables ✅ (v1.1.4)
+- [x] Collection Base URL for nested folders & `{{baseUrl}}` priority ✅ (v1.1.4)
+- [x] Resizable sidebar & response panels ✅ (v1.1.4)
+- [x] Custom toast notifications ✅ (v1.1.4)
+
+### Planned
+
 - [ ] WebSocket Support
-- [ ] GraphQL Support
+- [ ] GraphQL Support (full client)
 - [ ] Mock Server
 - [ ] Team Collaboration
 - [ ] Cloud Sync

@@ -166,6 +166,16 @@ Future<void> sendRequest(String url, String method) async {
    git commit -m "feat: add new feature"
    ```
 
+### سیاست Git (بدون attribution ابزار AI)
+
+- commitها فقط به نام **مشارکت‌کننده انسانی** (نویسنده واقعی PR) ثبت شوند.
+- در پیام commit یا footer از این موارد **استفاده نکنید**:
+  - `Co-authored-by: Cursor <cursoragent@cursor.com>`
+  - `Co-authored-by` برای ChatGPT، Copilot، Claude یا هر ابزار AI دیگر
+- اگر از Cursor/IDE کمک گرفتید، نیازی به ذکر آن در تاریخچه Git نیست.
+- ترجیحاً commit را از ترمینال با `git commit` بزنید تا footer اضافی اضافه نشود.
+- قبل از push: `git log -1 --format=%B` را بررسی کنید که فقط پیام شما باشد.
+
 ### قالب Commit Message
 
 ```
@@ -367,9 +377,9 @@ testWidgets('should display sidebar', (tester) async {
 
 ## 🎁 قدردانی
 
-از تمام مشارکت‌کنندگان پروژه تشکر می‌کنیم! 🙏
+از تمام مشارکت‌کنندگان انسانی پروژه تشکر می‌کنیم! 🙏
 
-نام شما در لیست Contributors ثبت خواهد شد.
+نام شما (به‌عنوان نویسنده commit/PR) در تاریخچه GitHub ثبت می‌شود. ابزارهای AI به‌عنوان co-author یا contributor لیست نمی‌شوند.
 
 ---
 

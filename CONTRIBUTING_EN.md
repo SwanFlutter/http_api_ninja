@@ -166,6 +166,16 @@ Future<void> sendRequest(String url, String method) async {
    git commit -m "feat: add new feature"
    ```
 
+### Git Policy (no AI attribution)
+
+- Commits must be attributed to the **human contributor** who authored the PR.
+- Do **not** add to commit messages or footers:
+  - `Co-authored-by: Cursor <cursoragent@cursor.com>`
+  - `Co-authored-by` lines for ChatGPT, Copilot, Claude, or any other AI tool
+- Using an AI assistant does not require credit in Git history.
+- Prefer `git commit` from the terminal to avoid IDE-injected co-author trailers.
+- Before pushing, run `git log -1 --format=%B` and confirm only your message is present.
+
 ### Commit Message Format
 
 ```
@@ -367,9 +377,9 @@ testWidgets('should display sidebar', (tester) async {
 
 ## 🎁 Acknowledgments
 
-Thank you to all project contributors! 🙏
+Thank you to all human contributors! 🙏
 
-Your name will be added to the Contributors list.
+Your name is recorded as the commit/PR author on GitHub. AI tools are not listed as co-authors or contributors.
 
 ---
 
