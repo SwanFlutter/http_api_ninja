@@ -22,6 +22,21 @@ Here is the English version of your **Remaining Tasks List**:
 - ✅ curl parser for method, headers, body and url
 - ✅ Export Collection to JSON (Copy to Clipboard)
 
+### **v1.1.4 ✅ (Completed)**
+- ✅ Improved Variable Replacement system (Regex & spaces support)
+- ✅ Global Base URL support (`base_url` or `baseUrl` variable)
+- ✅ Variable support in Request Body (JSON, XML, Text, Form Data)
+- ✅ Automatic Base URL attachment for relative paths
+- ✅ Fixed URL encoding issues with variable placeholders
+- ✅ Collection Base URL for nested folders & `{{baseUrl}}` priority over environment
+- ✅ Postman collection `baseUrl` variable import
+- ✅ Resizable sidebar panel (200–500px)
+- ✅ Resizable response panel (refactored layout in HomeView)
+- ✅ Custom toast notifications (`CustomToast` + toastification)
+- ✅ HttpController refactor into mixins (Collection, Environment, History, Request)
+- ✅ Body tab refactor with per-type storage and JSON validation
+- ✅ Commented out request debug console logs
+
 ### **v1.2.0**
 - GraphQL Support
 - WebSocket Support
@@ -41,4 +56,4 @@ Here is the English version of your **Remaining Tasks List**:
 ---
 **Note:** This list is continuously updated. To contribute, create an Issue or submit a Pull Request.
 
-**Last Updated:** May 20, 2026
+**Last Updated:** May 24, 2026

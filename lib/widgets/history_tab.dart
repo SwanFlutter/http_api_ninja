@@ -396,22 +396,9 @@ class HistoryTab extends StatelessWidget {
   }
 
   Color _getMethodColor(String method) {
-    switch (method) {
-      case 'GET':
-        return Colors.blue;
-      case 'POST':
-        return Colors.green;
-      case 'PUT':
-        return Colors.orange;
-      case 'DELETE':
-        return Colors.red;
-      case 'PATCH':
-        return Colors.purple;
-      case 'All':
-        return Colors.grey;
-      default:
-        return Colors.grey;
-    }
+    if (method == 'All') return Colors.grey;
+    final controller = Get.smartFind<HttpController>();
+    return controller.getMethodColor(method);
   }
 
   String _formatSize(int bytes) {

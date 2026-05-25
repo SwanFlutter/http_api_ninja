@@ -6,6 +6,7 @@ import 'package:flutter_code_view/flutter_code_view.dart';
 import 'package:get_x_master/get_x_master.dart';
 
 import '../../controller/http_controller.dart';
+import '../global/custom_toast.dart';
 
 class ResponseCodeSnippetTab extends StatelessWidget {
   final HttpController controller;
@@ -291,7 +292,7 @@ class _CodeTabContent extends StatelessWidget {
                     controller.selectedCodeLanguage.value,
                   );
                   Clipboard.setData(ClipboardData(text: code));
-                  Get.snackbar('Copied', 'Code copied to clipboard');
+                  CustomToast.success(title: 'Code copied to clipboard');
                 },
                 icon: const Icon(Icons.copy, size: 16),
                 label: Text('Copy', style: context.textTheme.bodySmall),
@@ -405,7 +406,9 @@ ${controller.body.value}
               TextButton.icon(
                 onPressed: () {
                   Clipboard.setData(ClipboardData(text: httpRequest));
-                  Get.snackbar('Copied', 'HTTP request copied to clipboard');
+                  CustomToast.success(
+                    title: 'HTTP request copied to clipboard',
+                  );
                 },
                 icon: const Icon(Icons.copy, size: 16),
                 label: Text('Copy', style: context.textTheme.bodySmall),
@@ -496,7 +499,7 @@ class _CopyTabContent extends StatelessWidget {
           icon: const Icon(Icons.copy, size: 18),
           onPressed: () {
             Clipboard.setData(ClipboardData(text: content));
-            Get.snackbar('Copied', '$title copied to clipboard');
+            CustomToast.success(title: '$title copied to clipboard');
           },
         ),
       ),

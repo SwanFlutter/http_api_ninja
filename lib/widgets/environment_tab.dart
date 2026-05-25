@@ -4,6 +4,7 @@ import 'package:get_x_master/get_x_master.dart';
 
 import '../controller/http_controller.dart';
 import '../models/environment_model.dart';
+import 'global/custom_toast.dart';
 
 class EnvironmentTab extends StatelessWidget {
   const EnvironmentTab({super.key});
@@ -427,7 +428,7 @@ class EnvironmentTab extends StatelessWidget {
                 icon: const Icon(Icons.copy, size: 16),
                 onPressed: () {
                   Clipboard.setData(ClipboardData(text: '{{$key}}'));
-                  Get.snackbar('Copied', '{{$key}} copied to clipboard');
+                  CustomToast.success(title: '{{$key}} copied to clipboard');
                 },
                 tooltip: 'Copy variable syntax',
                 visualDensity: VisualDensity.compact,
@@ -721,6 +722,6 @@ class EnvironmentTab extends StatelessWidget {
   ) {
     final json = controller.exportEnvironment(envId);
     Clipboard.setData(ClipboardData(text: json));
-    Get.snackbar('Exported', 'Environment JSON copied to clipboard');
+    CustomToast.success(title: 'Environment JSON copied to clipboard');
   }
 }

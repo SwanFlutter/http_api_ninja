@@ -114,10 +114,10 @@ class RequestBuilderWidget extends StatelessWidget {
                                       method,
                                       style: TextStyle(
                                         fontSize: 13,
-                                        color: isDark
-                                            ? Colors.white
-                                            : Colors.black,
-                                        fontWeight: FontWeight.w600,
+                                        color: controller.getMethodColor(
+                                          method,
+                                        ),
+                                        fontWeight: FontWeight.bold,
                                       ),
                                     ),
                                   ),

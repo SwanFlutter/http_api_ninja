@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get_x_master/get_x_master.dart';
 import 'package:get_x_storage/get_x_storage.dart';
+import 'package:toastification/toastification.dart';
 
 import 'I18n/translations.dart';
 import 'bindings/http_ninja_bindings.dart';
@@ -27,21 +28,23 @@ class HttpApiNinjaApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      title: 'HTTP API Ninja',
-      onInit: () {
-        final UpdateController controller = Get.smartFind<UpdateController>();
-        controller.initPlatformState();
-      },
-      debugShowCheckedModeBanner: false,
-      translations: AppTranslations(),
-      locale: const Locale('en', 'US'),
-      fallbackLocale: const Locale('en', 'US'),
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      themeMode: initialThemeMode,
-      initialBinding: HttpNinjaBindings(),
-      home: const HomeView(),
+    return ToastificationWrapper(
+      child: GetMaterialApp(
+        title: 'HTTP API Ninja',
+        onInit: () {
+          final UpdateController controller = Get.smartFind<UpdateController>();
+          controller.initPlatformState();
+        },
+        debugShowCheckedModeBanner: false,
+        translations: AppTranslations(),
+        locale: const Locale('en', 'US'),
+        fallbackLocale: const Locale('en', 'US'),
+        theme: AppTheme.lightTheme,
+        darkTheme: AppTheme.darkTheme,
+        themeMode: initialThemeMode,
+        initialBinding: HttpNinjaBindings(),
+        home: const HomeView(),
+      ),
     );
   }
 }

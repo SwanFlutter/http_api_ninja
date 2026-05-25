@@ -21,7 +21,7 @@ class SidebarWidget extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
-      width: 280,
+      width: double.infinity,
       decoration: BoxDecoration(
         color: isDark ? const Color(0xFF252526) : Colors.grey[100],
         border: Border(
@@ -178,6 +178,8 @@ class SidebarWidget extends StatelessWidget {
 
               // Collections Tab
               if (selectedTab == Messages.collections) {
+                // Trigger rebuild when selectedRequest changes
+                controller.selectedRequest.value;
                 return _buildCollectionsTab(controller);
               }
 
@@ -311,18 +313,41 @@ class SidebarWidget extends StatelessWidget {
                 autofocus: true,
               ),
               const SizedBox(height: 16),
-              DropdownButtonFormField<String>(
-                style: context.textTheme.bodyMedium,
-                initialValue: selectedMethod,
-                decoration: const InputDecoration(labelText: 'Method'),
-                items: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH']
-                    .map((m) => DropdownMenuItem(value: m, child: Text(m)))
-                    .toList(),
-                onChanged: (value) {
-                  if (value != null) {
-                    setState(() => selectedMethod = value);
-                  }
-                },
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  'Method',
+                  style: context.textTheme.labelMedium?.copyWith(
+                    color: Colors.grey[600],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'].map((m) {
+                  final isSelected = selectedMethod == m;
+                  final color = controller.getMethodColor(m);
+                  return ChoiceChip(
+                    label: Text(m),
+                    selected: isSelected,
+                    onSelected: (selected) {
+                      if (selected) {
+                        setState(() => selectedMethod = m);
+                      }
+                    },
+                    selectedColor: color.withOpacity(0.2),
+                    side: isSelected
+                        ? BorderSide(color: color, width: 2)
+                        : BorderSide(color: Colors.grey[300]!),
+                    labelStyle: TextStyle(
+                      color: isSelected ? color : Colors.grey[600],
+                      fontWeight: isSelected ? FontWeight.bold : null,
+                      fontSize: 12,
+                    ),
+                  );
+                }).toList(),
               ),
               const SizedBox(height: 16),
               Obx(
@@ -740,19 +765,7 @@ class SidebarWidget extends StatelessWidget {
   }
 
   Color _getMethodColor(String method) {
-    switch (method) {
-      case 'GET':
-        return Colors.blue;
-      case 'POST':
-        return Colors.green;
-      case 'PUT':
-        return Colors.orange;
-      case 'DELETE':
-        return Colors.red;
-      case 'PATCH':
-        return Colors.purple;
-      default:
-        return Colors.grey;
-    }
+    final controller = Get.smartFind<HttpController>();
+    return controller.getMethodColor(method);
   }
 }

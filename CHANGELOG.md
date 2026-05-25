@@ -4,6 +4,40 @@ All notable changes to this project will be documented in this file.
 
 
 
+## [1.1.4] - 2026-05-24
+
+### ✨ New Features
+
+#### UI & Layout
+- **Resizable Sidebar**: Drag the divider between sidebar and request builder to resize (200–500px).
+- **Resizable Response Panel**: Shared column resizer pattern in `HomeView` (300–800px).
+- **Custom Toast Notifications**: `CustomToast` helper with toastification (success, error, warning, info).
+
+#### Collection Base URL
+- **Nested Folder Support**: Collection base URL applies to requests inside sub-folders.
+- **Collection Priority**: `{{baseUrl}}` / `{{base_url}}` resolve from collection base URL before environment.
+- **Variable Aliases**: Case-insensitive lookup for `baseUrl`, `base_url`, `BASE_URL`, etc.
+- **Safe URL Building**: Environment base URL is not prepended when URL still contains `{{...}}` placeholders.
+- **Postman Import**: Collection-level `baseUrl` variables are imported into collection `baseUrl`.
+
+### 🔧 Improvements
+
+#### Advanced Variable System
+- **Global Base URL**: Use `base_url` or `baseUrl` from environment/global variables for relative paths.
+- **Body Variables**: Variables (`{{var}}`) are replaced in Request Body (JSON, XML, Text, Form Data).
+- **Improved Regex**: Better detection of variables with dots, hyphens, and spaces (e.g., `{{ api.url }}`).
+- **Smart URL Processing**: Dedicated `_resolveRequestUrl()` for correct base URL + variable resolution.
+- **Fixed Encoding**: Resolved "No host specified" error caused by URL encoding of `{{` and `}}` characters.
+
+#### Architecture & Code Quality
+- **Controller Mixins**: Split `HttpController` into `CollectionMixin`, `EnvironmentMixin`, `HistoryMixin`, `RequestMixin`.
+- **Body Tab Refactor**: Per-type body storage (JSON/XML/Text/GraphQL), live JSON validation, `BodyTabController`.
+- **Request Persistence**: Save current request works for requests in nested collection folders.
+- **Debug Logs**: Request debug `debugPrint` calls commented out for cleaner console output.
+
+### 📦 Dependencies
+- Added `toastification` (git dependency) for in-app notifications.
+
 ## [1.1.3] - 2026-05-21
 
 - ✅ Add Import feature (curl, gRpcurl, Raw, text, url, JSON)

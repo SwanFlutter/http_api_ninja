@@ -11,25 +11,18 @@ import 'http_controller.dart';
 class UpdateController extends GetXController {
   // Current app version - UPDATE THIS WITH EACH RELEASE
   final _plugin = PlatformVersion();
-  static  String currentVersion = '';
+  static String currentVersion = '';
 
-
-  Future<void> initPlatformState()async {
-
+  Future<void> initPlatformState() async {
     final appVersion = await _plugin.getAppVersion();
 
-    try{
+    try {
       currentVersion = appVersion!;
-
-      print("currentVersion: $currentVersion");
       update();
-    }catch (e) {
+    } catch (e) {
       debugPrint('Error: $e');
     }
-
-
   }
-
 
   // GitHub repository info - UPDATE WITH YOUR REPO
   static const String githubOwner = 'SwanFlutter';
@@ -190,7 +183,8 @@ class UpdateController extends GetXController {
     try {
       // Get download directory
       final dir =
-          await PathProviderMaster.getDownloadsDirectory() ?? await PathProviderMaster.getTemporaryDirectory();
+          await PathProviderMaster.getDownloadsDirectory() ??
+          await PathProviderMaster.getTemporaryDirectory();
       final fileName = downloadUrl.value.split('/').last;
       final filePath = '${dir?.path}/$fileName';
 

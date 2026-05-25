@@ -6,6 +6,7 @@ class HttpRequestModel {
   final Map<String, String> headers;
   final Map<String, String> queryParams;
   final String? body;
+  final String? bodyType; // New field to track body type
   final String? authType;
   final Map<String, String>? authData;
   final DateTime createdAt;
@@ -19,6 +20,7 @@ class HttpRequestModel {
     this.headers = const {},
     this.queryParams = const {},
     this.body,
+    this.bodyType,
     this.authType,
     this.authData,
     required this.createdAt,
@@ -33,6 +35,7 @@ class HttpRequestModel {
     'headers': headers,
     'queryParams': queryParams,
     'body': body,
+    'bodyType': bodyType,
     'authType': authType,
     'authData': authData,
     'createdAt': createdAt.toIso8601String(),
@@ -48,6 +51,7 @@ class HttpRequestModel {
         headers: Map<String, String>.from(json['headers'] ?? {}),
         queryParams: Map<String, String>.from(json['queryParams'] ?? {}),
         body: json['body'],
+        bodyType: json['bodyType'],
         authType: json['authType'],
         authData: json['authData'] != null
             ? Map<String, String>.from(json['authData'])

@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:get_x_master/get_x_master.dart';
 
 import '../../models/http_response_model.dart';
+import '../global/custom_toast.dart';
 
 class ResponseStatusBar extends StatelessWidget {
   final HttpResponseModel? response;
@@ -209,12 +210,7 @@ class ResponseStatusBar extends StatelessWidget {
                 text: const JsonEncoder.withIndent('  ').convert(response!.body),
               ),
             );
-            Get.snackbar(
-              'Copied',
-              'Response copied to clipboard',
-              snackPosition: SnackPosition.bottom,
-              duration: const Duration(seconds: 1),
-            );
+            CustomToast.success(title: 'Response copied to clipboard');
           },
           tooltip: 'Copy Response',
           constraints: const BoxConstraints(minWidth: 36, minHeight: 36),

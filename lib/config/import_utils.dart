@@ -1,7 +1,10 @@
+// ignore_for_file: curly_braces_in_flow_control_structures
+
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 
+import '../controller/environment_mixin.dart';
 import '../models/collection_model.dart';
 import '../models/http_request_model.dart';
 
@@ -50,58 +53,58 @@ class ImportUtils {
     }
 
     if (input.length <= 5000000) {
-    // 4. strip "response" arrays first (common source of heavy/broken JSON)
-    try {
-      return _doParseJson(_stripResponseArrays(input));
-    } catch (_) {}
-
-    if (input.length <= 5000000) {
-      // 5. strip raw field
+      // 4. strip "response" arrays first (common source of heavy/broken JSON)
       try {
-        return _doParseJson(_stripStringField(input, 'raw'));
+        return _doParseJson(_stripResponseArrays(input));
       } catch (_) {}
 
-      // 6. strip raw + body
-      try {
-        var s = _stripStringField(input, 'raw');
-        s = _stripStringField(s, 'body');
-        return _doParseJson(s);
-      } catch (_) {}
+      if (input.length <= 5000000) {
+        // 5. strip raw field
+        try {
+          return _doParseJson(_stripStringField(input, 'raw'));
+        } catch (_) {}
 
-      // 7. strip raw + body + description
-      try {
-        var s = _stripStringField(input, 'raw');
-        s = _stripStringField(s, 'body');
-        s = _stripStringField(s, 'description');
-        return _doParseJson(s);
-      } catch (_) {}
+        // 6. strip raw + body
+        try {
+          var s = _stripStringField(input, 'raw');
+          s = _stripStringField(s, 'body');
+          return _doParseJson(s);
+        } catch (_) {}
 
-      // 8. strip response + raw + body + description
-      try {
-        var s = _stripResponseArrays(input);
-        s = _stripStringField(s, 'raw');
-        s = _stripStringField(s, 'body');
-        s = _stripStringField(s, 'description');
-        return _doParseJson(s);
-      } catch (_) {}
+        // 7. strip raw + body + description
+        try {
+          var s = _stripStringField(input, 'raw');
+          s = _stripStringField(s, 'body');
+          s = _stripStringField(s, 'description');
+          return _doParseJson(s);
+        } catch (_) {}
 
-      // 9. nuclear option - strip most messy fields but KEEP structural ones (name, url, key)
-      try {
-        var s = input;
-        for (var field in [
-          'raw',
-          'body',
-          'description',
-          'message',
-          'text',
-          'value',
-        ]) {
-          s = _stripStringField(s, field);
-        }
-        s = _stripResponseArrays(s);
-        return _doParseJson(_lightFixJson(s));
-      } catch (_) {}
-    }
+        // 8. strip response + raw + body + description
+        try {
+          var s = _stripResponseArrays(input);
+          s = _stripStringField(s, 'raw');
+          s = _stripStringField(s, 'body');
+          s = _stripStringField(s, 'description');
+          return _doParseJson(s);
+        } catch (_) {}
+
+        // 9. nuclear option - strip most messy fields but KEEP structural ones (name, url, key)
+        try {
+          var s = input;
+          for (var field in [
+            'raw',
+            'body',
+            'description',
+            'message',
+            'text',
+            'value',
+          ]) {
+            s = _stripStringField(s, field);
+          }
+          s = _stripResponseArrays(s);
+          return _doParseJson(_lightFixJson(s));
+        } catch (_) {}
+      }
     }
 
     return _emptyCollection("Invalid JSON");
@@ -116,10 +119,14 @@ class ImportUtils {
     while (i < src.length) {
       if (src[i] == '"' && src.startsWith('"response"', i)) {
         int j = i + 10;
-        while (j < src.length && _isWs(src[j])) j++;
+        while (j < src.length && _isWs(src[j])) {
+          j++;
+        }
         if (j < src.length && src[j] == ':') {
           j++;
-          while (j < src.length && _isWs(src[j])) j++;
+          while (j < src.length && _isWs(src[j])) {
+            j++;
+          }
           if (j < src.length && src[j] == '[') {
             int depth = 1;
             j++;
@@ -140,8 +147,10 @@ class ImportUtils {
                 }
                 continue;
               }
-              if (src[j] == '[') depth++;
-              else if (src[j] == ']') depth--;
+              if (src[j] == '[') {
+                depth++;
+              } else if (src[j] == ']')
+                depth--;
               j++;
             }
             buf.write('"response": []');
@@ -167,10 +176,14 @@ class ImportUtils {
     while (i < src.length) {
       if (src[i] == '"' && src.startsWith(search, i)) {
         int j = i + search.length;
-        while (j < src.length && _isWs(src[j])) j++;
+        while (j < src.length && _isWs(src[j])) {
+          j++;
+        }
         if (j < src.length && src[j] == ':') {
           j++;
-          while (j < src.length && _isWs(src[j])) j++;
+          while (j < src.length && _isWs(src[j])) {
+            j++;
+          }
           if (j < src.length && src[j] == '"') {
             // Found start of value string
             int k = j + 1;
@@ -187,8 +200,10 @@ class ImportUtils {
                 if (src[k] == '{' || src[k] == '[') isJson = true;
               }
               if (isJson) {
-                if (src[k] == '{' || src[k] == '[') innerBrackets++;
-                else if (src[k] == '}' || src[k] == ']') innerBrackets--;
+                if (src[k] == '{' || src[k] == '[') {
+                  innerBrackets++;
+                } else if (src[k] == '}' || src[k] == ']')
+                  innerBrackets--;
               }
 
               // Check if this quote is a structural end
@@ -380,14 +395,18 @@ class ImportUtils {
       // If not balanced, check if this is the end of a field like "raw" or "body"
       // by looking ahead for the next Postman key.
       int k = j + 1;
-      while (k < src.length && (_isWs(src[k]) || src[k] == ',')) k++;
+      while (k < src.length && (_isWs(src[k]) || src[k] == ',')) {
+        k++;
+      }
       if (k < src.length && src[k] == '"') {
         // Look ahead for next key
         int m = k + 1;
         while (m < src.length && m < k + 300) {
           if (src[m] == '"') {
             int n = m + 1;
-            while (n < src.length && _isWs(src[n])) n++;
+            while (n < src.length && _isWs(src[n])) {
+              n++;
+            }
             if (n < src.length && src[n] == ':') {
               final key = src.substring(k + 1, m).trim();
               if (_isTopLevelKey(key)) return true; // It's a structural end
@@ -421,7 +440,8 @@ class ImportUtils {
             }
             if (n < src.length && src[n] == ':') {
               final key = src.substring(k + 1, m).trim();
-              if (_isTopLevelKey(key)) return true; // Always structural if top-level key follows
+              if (_isTopLevelKey(key))
+                return true; // Always structural if top-level key follows
               if (balanced && _isKnownPostmanKey(key)) return true;
               return false;
             }
@@ -563,12 +583,30 @@ class ImportUtils {
       "sub-collections: ${subCollections.length}",
     );
 
+    final collectionBaseUrl = _extractPostmanCollectionBaseUrl(data);
+
     return CollectionModel(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       name: rootName,
+      baseUrl: collectionBaseUrl,
       requests: rootRequests,
       folders: subCollections,
     );
+  }
+
+  static String? _extractPostmanCollectionBaseUrl(Map<String, dynamic> data) {
+    final variables = data['variable'];
+    if (variables is! List) return null;
+
+    for (final item in variables) {
+      if (item is! Map<String, dynamic>) continue;
+      final key = item['key']?.toString() ?? '';
+      if (EnvironmentMixin.isBaseUrlVariable(key)) {
+        final value = item['value']?.toString() ?? '';
+        if (value.isNotEmpty) return value;
+      }
+    }
+    return null;
   }
 
   static HttpRequestModel _convertPostmanRequest(
