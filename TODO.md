@@ -37,6 +37,19 @@ Here is the English version of your **Remaining Tasks List**:
 - ✅ Body tab refactor with per-type storage and JSON validation
 - ✅ Commented out request debug console logs
 
+### **v1.1.5 ✅ (Completed)**
+- ✅ Professional export/import system with file save dialog
+- ✅ File name input for custom export filenames
+- ✅ File picker import for selecting JSON files
+- ✅ Export to Postman v2.1 and HTTP API Ninja backup formats
+- ✅ Reduced dropdown font size from 14px to 13px
+- ✅ Added collections_io_dialog.dart for file operations
+- ✅ Added postman_collection_utils.dart for Postman v2.1 support
+- ✅ Added code_generator.dart and type_generator.dart utilities
+- ✅ New helper methods for file-based export operations
+- ✅ Loading indicators for export/import operations
+- ✅ Added file_picker dependency for file dialogs
+
 ### **v1.2.0**
 - GraphQL Support
 - WebSocket Support
@@ -56,4 +69,4 @@ Here is the English version of your **Remaining Tasks List**:
 ---
 **Note:** This list is continuously updated. To contribute, create an Issue or submit a Pull Request.
 
-**Last Updated:** May 24, 2026
+**Last Updated:** May 28, 2026

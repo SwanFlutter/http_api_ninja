@@ -7,6 +7,7 @@ import 'package:get_x_master/get_x_master.dart';
 
 import '../I18n/messages.dart';
 import '../config/import_utils.dart';
+import '../config/postman_collection_utils.dart';
 import '../controller/http_controller.dart';
 import '../models/collection_model.dart';
 import '../models/http_request_model.dart';
@@ -428,9 +429,19 @@ class _ImportDialogState extends State<ImportDialog> {
   /// Top-level function required by [compute] — must be static or top-level.
   static dynamic _parseInBackground(Map<String, String> data) {
     try {
-      return ImportUtils.parseImport(data['type']!, data['input']!);
+      final type = data['type']!.toLowerCase();
+      final input = data['input']!;
+
+      if (type == 'json') {
+        try {
+          final collections = PostmanCollectionUtils.parseImportPayload(input);
+          if (collections.length > 1) return collections;
+          if (collections.length == 1) return collections.first;
+        } catch (_) {}
+      }
+
+      return ImportUtils.parseImport(data['type']!, input);
     } catch (e) {
-      // Return null so the caller can show a friendly error
       return null;
     }
   }

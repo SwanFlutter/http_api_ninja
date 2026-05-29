@@ -3,6 +3,7 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  image_picker_master
   path_provider_master
   platform_version
   url_launcher_windows

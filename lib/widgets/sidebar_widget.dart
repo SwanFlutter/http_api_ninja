@@ -6,6 +6,7 @@ import '../I18n/messages.dart';
 import '../controller/http_controller.dart';
 import '../models/http_request_model.dart';
 import 'about_dialog.dart';
+import 'collections_io_dialog.dart';
 import 'environment_tab.dart';
 import 'history_tab.dart';
 import 'import_dialog.dart';
@@ -81,6 +82,42 @@ class SidebarWidget extends StatelessWidget {
                     icon: const Icon(Icons.input, size: 18),
                     label: Text(
                       Messages.import.tr,
+                      style: context.textTheme.bodyMedium,
+                    ),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton.icon(
+                    onPressed: () => CollectionsIoDialog.showImport(context),
+                    icon: const Icon(Icons.folder_open, size: 18),
+                    label: Text(
+                      'Import All',
+                      style: context.textTheme.bodyMedium,
+                    ),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton.icon(
+                    onPressed: () => CollectionsIoDialog.showExport(context),
+                    icon: const Icon(Icons.ios_share, size: 18),
+                    label: Text(
+                      'Export All',
                       style: context.textTheme.bodyMedium,
                     ),
                     style: OutlinedButton.styleFrom(
@@ -299,97 +336,152 @@ class SidebarWidget extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) => StatefulBuilder(
-        builder: (context, setState) => AlertDialog(
-          title: Text('New Request', style: context.textTheme.titleSmall),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: nameController,
-                decoration: const InputDecoration(
-                  labelText: 'Request Name',
-                  hintText: 'Enter request name',
-                ),
-                autofocus: true,
-              ),
-              const SizedBox(height: 16),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Method',
-                  style: context.textTheme.labelMedium?.copyWith(
-                    color: Colors.grey[600],
+        builder: (context, setState) {
+          // Build collection tree inside StatefulBuilder so setState works correctly
+          Widget buildCollectionTree(
+            List<CollectionModel> cols, {
+            double depth = 0,
+          }) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: cols.map((collection) {
+                return ExpansionTile(
+                  tilePadding: EdgeInsets.only(left: depth * 16 + 8, right: 8),
+                  initiallyExpanded: true,
+                  title: Row(
+                    children: [
+                      Radio<String>(
+                        value: collection.id,
+                        groupValue: selectedCollectionId,
+                        onChanged: (value) =>
+                            setState(() => selectedCollectionId = value),
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () => setState(
+                            () => selectedCollectionId = collection.id,
+                          ),
+                          child: Text(
+                            collection.name,
+                            style: const TextStyle(fontSize: 13),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ),
-              const SizedBox(height: 8),
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'].map((m) {
-                  final isSelected = selectedMethod == m;
-                  final color = controller.getMethodColor(m);
-                  return ChoiceChip(
-                    label: Text(m),
-                    selected: isSelected,
-                    onSelected: (selected) {
-                      if (selected) {
-                        setState(() => selectedMethod = m);
-                      }
-                    },
-                    selectedColor: color.withOpacity(0.2),
-                    side: isSelected
-                        ? BorderSide(color: color, width: 2)
-                        : BorderSide(color: Colors.grey[300]!),
-                    labelStyle: TextStyle(
-                      color: isSelected ? color : Colors.grey[600],
-                      fontWeight: isSelected ? FontWeight.bold : null,
-                      fontSize: 12,
+                  children: collection.folders.isNotEmpty
+                      ? [
+                          buildCollectionTree(
+                            collection.folders,
+                            depth: depth + 1,
+                          ),
+                        ]
+                      : [],
+                );
+              }).toList(),
+            );
+          }
+
+          return AlertDialog(
+            title: Text('New Request', style: context.textTheme.titleSmall),
+            content: SizedBox(
+              width: 400,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TextField(
+                      controller: nameController,
+                      decoration: const InputDecoration(
+                        labelText: 'Request Name',
+                        hintText: 'Enter request name',
+                      ),
+                      autofocus: true,
                     ),
-                  );
-                }).toList(),
-              ),
-              const SizedBox(height: 16),
-              Obx(
-                () => DropdownButtonFormField<String>(
-                  initialValue: selectedCollectionId,
-                  style: context.textTheme.bodyMedium,
-                  decoration: const InputDecoration(labelText: 'Collection'),
-                  items: controller.collections
-                      .map(
-                        (c) =>
-                            DropdownMenuItem(value: c.id, child: Text(c.name)),
-                      )
-                      .toList(),
-                  onChanged: (value) => selectedCollectionId = value,
+                    const SizedBox(height: 16),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Method',
+                        style: context.textTheme.labelMedium?.copyWith(
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'].map((
+                        m,
+                      ) {
+                        final isSelected = selectedMethod == m;
+                        final color = controller.getMethodColor(m);
+                        return ChoiceChip(
+                          label: Text(m),
+                          selected: isSelected,
+                          onSelected: (selected) {
+                            if (selected) {
+                              setState(() => selectedMethod = m);
+                            }
+                          },
+                          selectedColor: color.withValues(alpha: 0.2),
+                          side: isSelected
+                              ? BorderSide(color: color, width: 2)
+                              : BorderSide(color: Colors.grey[300]!),
+                          labelStyle: TextStyle(
+                            color: isSelected ? color : Colors.grey[600],
+                            fontWeight: isSelected ? FontWeight.bold : null,
+                            fontSize: 12,
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      'Collection',
+                      style: context.textTheme.labelMedium?.copyWith(
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Container(
+                      constraints: const BoxConstraints(maxHeight: 300),
+                      child: SingleChildScrollView(
+                        child: buildCollectionTree(controller.collections),
+                      ),
+                    ),
+                  ],
                 ),
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Get.back(),
+                child: const Text('Cancel'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  if (nameController.text.isNotEmpty &&
+                      selectedCollectionId != null) {
+                    final request = HttpRequestModel(
+                      id: DateTime.now().millisecondsSinceEpoch.toString(),
+                      name: nameController.text,
+                      method: selectedMethod,
+                      url: '',
+                      createdAt: DateTime.now(),
+                    );
+                    controller.addRequest(selectedCollectionId!, request);
+                    Get.back();
+                  }
+                },
+                child: const Text('Create'),
               ),
             ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Get.back(),
-              child: const Text('Cancel'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                if (nameController.text.isNotEmpty &&
-                    selectedCollectionId != null) {
-                  final request = HttpRequestModel(
-                    id: DateTime.now().millisecondsSinceEpoch.toString(),
-                    name: nameController.text,
-                    method: selectedMethod,
-                    url: '',
-                    createdAt: DateTime.now(),
-                  );
-                  controller.addRequest(selectedCollectionId!, request);
-                  Get.back();
-                }
-              },
-              child: const Text('Create'),
-            ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
@@ -508,7 +600,7 @@ class SidebarWidget extends StatelessWidget {
                               color: Colors.blue[400],
                             ),
                             const SizedBox(width: 8),
-                            Text(Messages.export.tr),
+                            const Text('Export (Postman)'),
                           ],
                         ),
                       ),

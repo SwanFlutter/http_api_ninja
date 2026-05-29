@@ -6,11 +6,15 @@
 
 #include "generated_plugin_registrant.h"
 
+#include <image_picker_master/image_picker_master_plugin.h>
 #include <path_provider_master/path_provider_master_plugin.h>
 #include <platform_version/platform_version_plugin.h>
 #include <url_launcher_linux/url_launcher_plugin.h>
 
 void fl_register_plugins(FlPluginRegistry* registry) {
+  g_autoptr(FlPluginRegistrar) image_picker_master_registrar =
+      fl_plugin_registry_get_registrar_for_plugin(registry, "ImagePickerMasterPlugin");
+  image_picker_master_plugin_register_with_registrar(image_picker_master_registrar);
   g_autoptr(FlPluginRegistrar) path_provider_master_registrar =
       fl_plugin_registry_get_registrar_for_plugin(registry, "PathProviderMasterPlugin");
   path_provider_master_plugin_register_with_registrar(path_provider_master_registrar);

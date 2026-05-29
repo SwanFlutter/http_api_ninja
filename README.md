@@ -60,6 +60,12 @@ A powerful and modern HTTP client built with Flutter and Get_x_master - An alter
 - **Variable Syntax**: Use `{{variable}}` in URL, Headers, Query Params
 - **Import/Export**: JSON format support
 
+### 📤 Export/Import
+- **Professional Export**: Export collections to JSON files with custom save location
+- **File Picker Import**: Import collections by selecting JSON files from system
+- **Multiple Formats**: Support for Postman v2.1 and HTTP API Ninja backup formats
+- **Custom Filenames**: Enter custom names for exported files
+
 ### 🎨 Advanced Features
 - **Syntax Highlighting**: JSON response with color coding
 - **Line Numbers**: Easy code navigation
@@ -142,9 +148,12 @@ flutter run -d chrome
 dependencies:
   flutter:
     sdk: flutter
-  get_x_master: ^0.0.19
-  get_x_storage: ^0.0.7
-  flutter_code_view: ^0.0.3
+  get_x_master: ^0.0.32
+  get_x_storage: ^0.1.0
+  flutter_code_view: ^0.0.5
+  file_picker: ^8.1.6
+  image_picker_master: ^0.0.4
+  path_provider_master: ^1.0.0
 ```
 
 ## 🎨 Theming
@@ -202,6 +211,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [x] Collection Base URL for nested folders & `{{baseUrl}}` priority ✅ (v1.1.4)
 - [x] Resizable sidebar & response panels ✅ (v1.1.4)
 - [x] Custom toast notifications ✅ (v1.1.4)
+- [x] Professional export/import with file save dialog ✅ (v1.1.5)
+- [x] File picker for import/export operations ✅ (v1.1.5)
 
 ### Planned
 

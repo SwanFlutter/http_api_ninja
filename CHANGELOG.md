@@ -4,6 +4,38 @@ All notable changes to this project will be documented in this file.
 
 
 
+## [1.1.5] - 2026-05-28
+
+### ✨ New Features
+
+#### Professional Export/Import System
+- **File Save Dialog**: Export collections with custom save location using file picker
+- **File Name Input**: Enter custom filename for exports
+- **File Picker Import**: Import collections by selecting JSON files from system
+- **Export Formats**: Support for Postman v2.1 and HTTP API Ninja backup formats
+- **Reduced UI Font Size**: Dropdown font size reduced from 14px to 13px for better UI
+
+#### New Files
+- **collections_io_dialog.dart**: Professional export/import dialog with file operations
+- **postman_collection_utils.dart**: Postman collection v2.1 export/import utilities
+- **code_generator.dart**: Code generation utilities
+- **type_generator.dart**: Type generation utilities
+
+### 🔧 Improvements
+
+#### Collection Management
+- **Export to File**: Export all collections directly to JSON files with custom path
+- **Import from File**: Import collections by selecting JSON files from file system
+- **Better UX**: Replaced clipboard-based export/import with file-based operations
+- **Loading States**: Added loading indicators for export/import operations
+
+#### Code Quality
+- **New Helper Methods**: `getAllCollectionsPostmanJson()` and `getAllCollectionsBackupJson()` for file operations
+- **Improved Error Handling**: Better error messages for file operations
+
+### 📦 Dependencies
+- Added `file_picker: ^8.1.6` for file save/open dialogs
+
 ## [1.1.4] - 2026-05-24
 
 ### ✨ New Features
